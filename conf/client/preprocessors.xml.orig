@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To extend the list of available preprocessors, add your new preprocessors to
+     this file. If a preprocessor with the same name exists in this file and in the 
+	 conf/preprocessors.xml file, the preprocessor defined below overrides the preprocessor
+	 in conf. -->
+<preprocessors>
+
+	<!-- ================================================= -->
+	<!-- Example of the different types of user parameters -->
+	<!--                                                   -->
+	<!-- For the "index-list" and "index-choice" types,    -->
+	<!-- the @name attribute must match a string index     -->
+	<!-- from the index definition                         -->
+	<!--                                                   -->
+	<!-- @label and @tooltip are optional attributes       -->
+	<!-- for all types of parameter                        -->
+	<!--                                                   -->
+	<!-- @format is optional for all types except "date"   -->
+	<!-- see http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html -->
+
+	<!--
+	<user>
+		<parameter label="Sample text field" name="text.field" mandatory="false" type="string"/>
+		<parameter label="Sample text field with validation" name="text.field2" mandatory="false" type="string" format="[0-9]*[.][0-9]*[.][0-9]{3}" tooltip="2.3.009"/>
+		<parameter label="Sample date" name="date" mandatory="false" type="date" format="yyyy-MM-dd" tooltip="Format is yyyy-mm-dd"/>
+		<parameter label="Sample list" name="list" mandatory="false" type="list">
+			<value name="item1">Item 1</value>
+			<value name="item2">Item 2</value>
+		</parameter>
+		<parameter label="Sample choice" name="choice" mandatory="false" type="choice">
+			<value name="value1" _default="true">Value 1</value>
+			<value name="value2">Value 2</value>
+		</parameter>
+		<parameter label="Sample index-list (using audience)" name="audience" mandatory="false" type="index-list"/>
+		<parameter label="Sample index-choice (using platform)" name="platform" mandatory="false" type="index-choice"/>
+	</user>
+	-->
+
+	<!-- ================================================= -->
+
+	<preprocessor name="foobar" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor" >
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-client.xml"/>
+				<parameter name="target" value="client.FooBarwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+		</parameters>
+	</preprocessor>
+
+</preprocessors>

@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project name="com.nimble.pdf-standard">
+    <import file="build_dita2nimble-pdf-standard.xml"/>
+</project>

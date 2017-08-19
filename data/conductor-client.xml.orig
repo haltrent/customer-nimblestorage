@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="conductor-client" default="" basedir=".">
+
+	<!-- Uncomment the following property to overwrite the one defined in outgen-init.properties -->
+	<!-- <property name="outgen.ot.version" value="2.3.1"/>	-->
+
+	<!-- Import basic init -->
+	<import file="outgen-init.xml"/>
+
+	<target name="client.FooBarwrapper" depends="default_dependencies, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>client.FooBarwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<!-- These are the required target calls to do -->
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+
+		<!-- if your transformation scenario is for PDF, you will need the following target calls -->
+		<antcall target="ot_build_add_pdfrenderer"/>
+		<antcall target="ot_build_keep_topicfo"/>
+
+		<!-- if your transformation scenario is for CHM, you will need the following target calls -->
+		<antcall target="ot_build_add_htmlcompiler"/>
+		
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="foobar"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build" inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>client.FooBarwrapper</echoend>
+	</target>
+
+</project>

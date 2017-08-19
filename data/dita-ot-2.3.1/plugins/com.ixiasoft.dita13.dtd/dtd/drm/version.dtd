@@ -1,0 +1,119 @@
+<!-- ============================================================= -->
+<!--                    HEADER                                     -->
+<!-- ============================================================= -->
+<!--  MODULE:    DITA Version DTD                                  -->
+<!--  VERSION:   1.0                                               -->
+<!--  DATE:      February 2014                                     -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    PUBLIC DOCUMENT TYPE DEFINITION            -->
+<!--                    TYPICAL INVOCATION                         -->
+<!--                                                               -->
+<!--  Refer to this file by the following public identifier or an 
+      appropriate system identifier 
+PUBLIC "-//IXIA//DTD DITA CMS Version//EN"
+      Delivered as file "version.dtd"                              -->
+
+<!-- ============================================================= -->
+<!-- SYSTEM:     Darwin Information Typing Architecture (DITA)     -->
+<!--                                                               -->
+<!-- PURPOSE:    DTD to describe DITA Version Maps                 -->
+<!--                                                               -->
+<!-- ORIGINAL CREATION DATE:                                       -->
+<!--             February 2004                                     -->
+<!--                                                               -->
+<!--             (C) Copyright IXIA 2014.                          -->
+<!--             All Rights Reserved.                              -->
+<!--                                                               -->
+<!--  UPDATES:                                                     -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    MAP ENTITY DECLARATIONS                    -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ENTITY DECLARATIONS                 -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE DECLARATIONS              -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN EXTENSIONS                          -->
+<!-- ============================================================= -->
+<!--                    One for each extended base element, with
+                        the name of the domain(s) in which the
+                        extension was declared                     -->
+
+<!ENTITY % mapgroup-d-dec 
+  PUBLIC "-//OASIS//ENTITIES DITA 1.3 Map Group Domain//EN" 
+         "../../../org.oasis-open.dita.v1_3/dtd/base/dtd/mapGroup.ent"
+>%mapgroup-d-dec;
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE EXTENSIONS                -->
+<!-- ============================================================= -->
+<!ENTITY % props-attribute-extensions  ""                            >
+<!ENTITY % base-attribute-extensions   ""                            >
+
+<!-- ============================================================= -->
+<!--                    DOMAINS ATTRIBUTE OVERRIDE                 -->
+<!-- ============================================================= -->
+<!--                    Must be declared ahead of the DTDs, which
+                        puts @domains first in order               -->
+
+<!ENTITY included-domains 
+                        "&mapgroup-d-att;
+                         &container-c;
+                        ">
+
+<!-- ============================================================= -->
+<!--                    CONTENT CONSTRAINT INTEGRATION             -->
+<!-- ============================================================= -->
+
+<!--                    Constraint on mapref content is defined    -->
+<!--                    inline for simplicity                      -->
+
+<!ENTITY container-c         "(map container-c)"                     >
+
+<!ENTITY % topicmeta         "topicmeta"                             >
+<!ENTITY % keydef.content    "(%topicmeta;)?"                        >
+<!ENTITY % mapref.content    "(%topicmeta;)?"                        >
+
+<!-- ============================================================= -->
+<!--                    MAP ELEMENT INTEGRATION                    -->
+<!-- ============================================================= -->
+
+<!ENTITY % map-type 
+  PUBLIC "-//OASIS//ELEMENTS DITA 1.3 Map//EN" 
+         "../../../org.oasis-open.dita.v1_3/dtd/base/dtd/map.mod"
+>%map-type;
+
+<!ENTITY % containerref-d-def     
+  PUBLIC "-//IXIA//ELEMENTS DITA 1.3 Container Reference Domain//EN" 
+         "containerrefDomain.mod"
+>%containerref-d-def;
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ELEMENT INTEGRATION                 -->
+<!-- ============================================================= -->
+
+<!ENTITY % mapgroup-d-def  
+  PUBLIC "-//OASIS//ELEMENTS DITA 1.3 Map Group Domain//EN" 
+         "../../../org.oasis-open.dita.v1_3/dtd/base/dtd/mapGroup.mod"
+>%mapgroup-d-def;
+
+<!ENTITY % version-type 
+  PUBLIC "-//IXIA//ELEMENTS DITA CMS Version//EN" 
+         "version.mod"
+>%version-type;
+
+<!-- ================== End DITA Version DTD  ==================== -->

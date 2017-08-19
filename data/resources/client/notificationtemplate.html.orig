@@ -1,0 +1,24 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <style>
+		body { font-family : Arial, Helvetica, sans-serif; }
+		h3 { color : #444; }
+		h4.product { color : #333; }
+		ul.buglist { list-style-type : none; }
+		ul.bugfix { list-style-type : square; }
+		p.note { font-style : italic; }
+	</style>
+  </head>
+  <body>
+	<p>This is an automated email notification from the Build Manifest Postprocess. If you are seeing this email, it means the Output Generator administrator has not changed
+                the default template. This template is located in the Output Generator installation directory under data/resources/client.<p>
+	<br/>
+	<p>For more information about changing this template, please see the Installing and Configuring the Output Generator document at the following URL:
+        <a href="http://www.ixiasoft.com/en/products/dita-cms/documentation/">http://www.ixiasoft.com/en/products/dita-cms/documentation/</a></p>
+<pre>Best regards,
+The IXIASOFT team
++1 (514) 279-4942
+<a href="mailto:support-dita@ixiasoft.com">support-dita@ixiasoft.com</a></pre>
+</body>
+</html>

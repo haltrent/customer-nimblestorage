@@ -1,0 +1,21 @@
+#
+# These properties control the SMTP configuration required to send emails at the end of the Build Manifest processing.  
+#
+bmanifest.smtp.mailhost = smtp.ixiasoft.local
+bmanifest.smtp.mailport = 25
+bmanifest.smtp.subject = This is an automated email from Skynet.
+bmanifest.smtp.from.address = no-reply@ixiasoft.com
+bmanifest.smtp.username =
+bmanifest.smtp.password =
+
+#You can create any property that you need for your SMTP mail library or 
+#that you can use in the template file. For example:
+bmanifest.smtp.ssl =
+
+#The property value will be expanded at runtime to match the destination.
+#The template can also include properties that will be expanded at runtime.
+bmanifest.smtp.message.file  = ${outgen.resources.dir.client}/notificationtemplate.html
+
+# This must be a valid target in your conductor file or one supplied by IXIASOFT, as follows:
+# target name: Ixiasoft.SendEmail or Ixiasoft.SendEmailWithAuthentication
+bmanifest.smtp.ant.target = Ixiasoft.SendEmail

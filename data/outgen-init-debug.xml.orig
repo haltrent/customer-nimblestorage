@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="outgen-init-debug" default="" basedir=".">
+
+	<property name="outgen.job.keep.temp" value="yes"/>
+	<property name="outgen.job.keep.topicfo" value="yes"/>
+	<property name="outgen.job.clean.ot.temp" value="no"/>
+	<property name="outgen.job.clean.outputdir" value="no"/>
+
+</project>

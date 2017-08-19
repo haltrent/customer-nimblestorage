@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="bmanifest-init-debug" default="" basedir=".">
+
+	<property name="bmanifest.job.keep.temp" value="yes"/>
+	<property name="bmanifest.job.keep.content" value="yes"/>
+
+</project>

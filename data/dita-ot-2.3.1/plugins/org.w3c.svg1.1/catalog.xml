@@ -1,0 +1,15 @@
+<?xml version="1.0" ?> 
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+	<group>
+		<public publicId="-//W3C//DTD SVG 1.1//EN" uri="dtd/svg11.dtd"/>
+		<public publicId="-//W3C//DTD SVG 1.1 Basic//EN" uri="dtd/svg11.dtd"/>
+		<public publicId="-//W3C//DTD SVG 1.1 Tiny//EN" uri="dtd/svg11.dtd"/>
+		<system systemId="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" uri="dtd/svg11.dtd"/>
+		<system systemId="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd" uri="dtd/svg11.dtd"/>
+		<system systemId="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd" uri="dtd/svg11.dtd"/>
+		<system systemId="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-flat-20030114.dtd" uri="dtd/svg11.dtd"/>
+	</group>
+
+</catalog>

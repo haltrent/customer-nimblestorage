@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="commontargets" default="" basedir=".">
+
+	<!--The previous version of commontargets.xml was becoming too large and hard to 
+		manage so it was split into 3 parts:
+		commontargets.xml:        Contains general targets that can be used in conductor files.
+		commontargets-system.xml: Contains targets used to create the build.xml file for the OT and
+                                  to call the ant of the OT; they can also be used in conductor files.
+		commontargets-macro.xml:  Contains all Ant macrodefs, called as tasks. 
+	-->
+
+	<!-- Import common targets macrodef -->
+	<import file="commontargets-macros.xml"/>
+
+	<!-- Import common targets system-->
+	<import file="commontargets-system.xml"/>
+
+	<target name="clean">
+		<echostart>clean [DEPRECATED]</echostart>
+		<antcall target="job_postprocess"/>
+		<echoend>clean [DEPRECATED]</echoend>
+	</target>
+
+	<target name="job_postprocess">
+		<echostart>job_postprocess</echostart>
+
+		<!-- Cleans the output temp folder unless prevented by ${outgen.job.keep.temp} or ${job.keep.temp} -->
+		<if>
+			<or>
+				<isset property="job.keep.temp"/>
+				<istrue value="${outgen.job.keep.temp}"/>
+			</or>
+			<then>
+				<echocaution>Clean task is disabled; property outgen.job.keep.temp set to "yes" or property job.keep.temp set to any value</echocaution>
+			</then>
+			<else>
+				<delete dir="${outgen.job.dir}" failonerror="false"/>
+				<echodebug>job_postprocess has deleted the folder "${outgen.job.dir}" defined by $${outgen.job.dir}</echodebug>
+			</else>
+		</if>
+
+		<echoend>job_postprocess</echoend>
+	</target>
+
+	<target name="clean_ot_output">
+		<echostart>clean_ot_output</echostart>
+
+		<if>
+			<or>
+				<isset property="job.clean.outputdir"/>
+				<istrue value="${outgen.job.clean.outputdir}"/>
+			</or>
+			<then>
+				<delete dir="${outgen.job.output.dir}/Configuration"/>
+				<delete dir="${outgen.job.output.dir}/Customization"/>
+				<delete file="${outgen.job.output.dir}/dita.list"/>
+				<delete file="${outgen.job.output.dir}/dita.xml.properties"/>
+				<echolog>Cleaned up the output dir ${outgen.job.output.dir}</echolog>
+			</then>
+			<else>
+				<echocaution>Clean OT outputdir is disabled with property outgen.job.clean.outputdir set to "yes" or property job.clean.outputdir set to any value</echocaution>
+			</else>
+		</if>
+
+		<echoend>clean_ot_output</echoend>
+	</target>
+
+	<target name="load_properties">
+		<echostart>load_properties</echostart>
+
+		<!-- Load user properties from the output type configuration -->
+		<!-- Cannot use any property defined in outgen_job_init -->
+		<if>
+			<available file="${outgen.job.userparam.filename}"/>
+			<then>
+				<echolog>Load the properties from file ${outgen.job.userparam.filename}</echolog>
+				<echolog>All properties are prefixed with "outgen.job.userparam"</echolog>
+				<loadproperties srcFile="${outgen.job.userparam.filename}" prefix="outgen.job.userparam"/>
+			</then>
+		</if>
+
+		<echoend>load_properties</echoend>
+	</target>
+
+	<target name="extract_HiRes_images">
+		<echostart>extract_HiRes_images</echostart>
+
+		<!-- Will process the multiple images container. -->
+		<!-- If the image to extract is a SVG or MathML file
+			 and the formatter is FOP, we need to generate a raster version
+			 of the SVG or MathML otherwise FOP will throw errors for these images -->
+		<if>
+			<equals arg1="${outgen.job.default.pdf.formatter}" arg2="fop"/>
+			<then>
+				<extract-images indir="${outgen.job.source.dir}" type="HiRes" extension=".image">
+					<equation mime="application/mathml+xml" ratio="1">
+						<param name="debug" value="0"/>
+					</equation>
+					<equation mime="image/svg+xml" ratio="1">
+						<param name="KEY_WIDTH" value="400"/>
+					</equation>
+				</extract-images>
+			</then>
+			<else>
+				<extract-images indir="${outgen.job.source.dir}" type="HiRes" extension=".image"/>
+			</else>
+		</if>
+
+		<echoend>extract_HiRes_images</echoend>
+	</target>
+
+	<target name="extract_LowRes_images">
+		<echostart>extract_LowRes_images</echostart>
+
+		<!-- Will process the multiple images container. -->
+		<!-- If the image to extract is a SVG or MathML file
+			 and the formatter is FOP, we need to generate a raster version
+			 of the SVG or MathML otherwise FOP will throw errors for these images -->
+		<if>
+			<equals arg1="${outgen.job.default.pdf.formatter}" arg2="fop"/>
+			<then>
+				<extract-images indir="${outgen.job.source.dir}" type="LowRes" extension=".image">
+					<equation mime="application/mathml+xml" ratio="1">
+						<param name="debug" value="0"/>
+					</equation>
+					<equation mime="image/svg+xml" ratio="1">
+						<param name="KEY_WIDTH" value="200"/>
+					</equation>
+				</extract-images>
+			</then>
+			<else>
+				<extract-images indir="${outgen.job.source.dir}" type="LowRes" extension=".image"/>
+			</else>
+		</if>
+
+		<echoend>extract_LowRes_images</echoend>
+	</target>
+
+	<target name="branding">
+		<echostart>branding</echostart>
+
+		<branding outdir="${outgen.job.dir}/branding" file="${outgen.resources.dir.client}/branding.xml" fullpath="false">
+			<key/>
+		</branding>
+
+		<echoend>branding</echoend>
+	</target>
+
+	<target name="flatten">
+		<echostart>flatten</echostart>
+
+		<!-- This will flatten the directory structure to make branched outputs possible  -->
+		<available file="${outgen.job.dir}/content/published" type="dir" property="published.present"/>
+		<available file="${outgen.job.dir}/content/authoring" type="dir" property="authoring.present"/>
+
+		<if>
+			<istrue value="${published.present}"/>
+			<then>
+				<if>
+					<istrue value="${authoring.present}"/>
+					<then>
+						<echolog>Flatten the branch</echolog>
+						<echolog>Copy the content of published into authoring. Fix any reference from published to authoring</echolog>
+						<!-- this is branched content -->
+						<!-- deal with published images -->
+
+						<copy todir="${outgen.job.dir}/content/authoring" flatten="true">
+							<fileset dir="${outgen.job.dir}/content/published"/>
+						</copy>
+
+						<replaceregexp flags="g" encoding="UTF-8">
+							<!-- g=global -->
+							<!-- href="mte1320176432855.xml" -->
+							<!-- TODO: Only support language code like en-us but not the 3 letter code -->
+							<regexp pattern="(../published/[a-zA-Z0-9]{2}\-[a-zA-Z0-9]{2}/[a-zA-Z]{1}[a-zA-Z0-9]{2}[0-9]{13}.ditamap_[0-9]*/)([a-zA-Z]{1}[a-zA-Z0-9]{2}[0-9]{13}(.dita|.xml|.ditamap|.image|.res))"/>
+							<!-- usage of the greedy flag to make sure we don't overshoot -->
+							<substitution expression="\2"/>
+							<!-- Using group 2 -->
+							<fileset dir="${outgen.job.source.dir}">
+								<!-- **/ covers subfolders -->
+								<include name="**/*.xml"/>
+								<include name="**/*.dita"/>
+								<include name="**/*.ditamap"/>
+							</fileset>
+						</replaceregexp>
+					</then>
+				</if>
+			</then>
+			<else>
+				<echodebug>This is not a branch</echodebug>
+			</else>
+		</if>
+
+		<echoend>flatten</echoend>
+	</target>
+
+	<target name="resolve_container_keyref">
+		<echostart>resolve_container_keyref</echostart>
+
+		<for param="file">
+			<path>
+				<fileset file="${outgen.job.source.filename}">
+					<containsregexp expression="&lt;containerref.*&gt;"/>
+				</fileset>
+			</path>
+			<sequential>
+				<echodebug>Replace all the keyref/conkeyref for file [@{file}]"</echodebug>
+				<resolve-container-keyref file="@{file}"/>
+			</sequential>
+		</for>
+
+		<echoend>resolve_container_keyref</echoend>
+	</target>
+	
+	<target name="add_keydefs">
+		<echostart>add keydefs to top map</echostart>
+		<echodebug>Replace all the keyref/conkeyref for file [${outgen.job.source.filename}]"</echodebug>
+		<add-keydefs file="${outgen.job.source.filename}">
+		    <!-- specify the position of keydef in bookmap -->
+			<keydefParent name="frontmatter"/>
+			<!-- add other parent type for keydef in other maps -->
+		</add-keydefs>
+		<echoend>add keydefs to top map</echoend>
+	</target>
+
+	<target name="gethostname">
+		<echostart>gethostname</echostart>
+
+		<!-- This can be either the machine name or the fqdn of the machine-->
+		<condition property="hostname" value="${env.HOSTNAME}">
+			<os family="unix"/>
+		</condition>
+		<!-- This contains just the machine and not the fqdn -->
+		<condition property="hostname" value="${env.COMPUTERNAME}">
+			<os family="windows"/>
+		</condition>
+		<echolog>HOSTNAME = ${hostname}</echolog>
+
+		<echoend>gethostname</echoend>
+	</target>
+
+	<target name="getobjecttype">
+		<echostart>getobjecttype</echostart>
+
+		<xmltask source="${outgen.job.source.filename}">
+			<xmlcatalog refid="ot.catalog"/>
+			<copy path="substring-before(substring-after(*/@class, ' '), '/')" property="outgen.job.source.objtype"/>
+		</xmltask>
+		<echolog>OBJTYPE = ${outgen.job.source.objtype}</echolog>
+
+		<echoend>getobjecttype</echoend>
+	</target>
+
+	<target name="Ixiasoft.SendEmail">
+		<echostart>Ixiasoft.SendEmail</echostart>
+		<mail mailhost="${outgen.smtp.mailhost}"
+			  mailport="${outgen.smtp.mailport}" 
+			  subject="${outgen.smtp.subject}" 
+			  charset="utf-8"
+			  messagemimetype="text/html"
+			  tolist="${outgen.smtp.to.addresses}"
+			  failonerror="false">
+			<from address="${outgen.smtp.from.address}"/>
+			<message src="${outgen.smtp.message.file}"/>
+		</mail>
+		<echoend>Ixiasoft.SendEmail</echoend>
+	</target>
+
+	<target name="Ixiasoft.SendEmailWithAuthentication">
+		<echostart>Ixiasoft.SendEmailWithAuthentication</echostart>
+		<mail mailhost="${outgen.smtp.mailhost}"
+			  mailport="${outgen.smtp.mailport}" 
+			  subject="${outgen.smtp.subject}" 
+			  charset="utf-8"
+			  messagemimetype="text/html"
+			  tolist="${outgen.smtp.to.addresses}"
+			  failonerror="false"
+			  user="${outgen.smtp.username}"
+			  password="${outgen.smtp.password}">
+			<from address="${outgen.smtp.from.address}"/>
+			<message src="${outgen.smtp.message.file}"/>
+		</mail>
+		<echoend>Ixiasoft.SendEmailWithAuthentication</echoend>	
+	</target>
+</project>

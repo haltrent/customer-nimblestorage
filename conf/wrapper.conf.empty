@@ -1,0 +1,167 @@
+#encoding=UTF-8
+# Configuration files must begin with a line specifying the encoding
+#  of the file.
+
+#********************************************************************
+#For more information 
+#
+#http://wrapper.tanukisoftware.org
+#********************************************************************
+
+#********************************************************************
+#Enable debugging for the #include directive of the wrapper.
+#When you enable this, the wrapper process must have write permission
+#to the bin folder. The wrapper.log will be saved there.
+#
+#To enable change ##include.debug for #include.debug
+##include.debug
+#********************************************************************
+
+#********************************************************************
+# Wrapper Localization
+#********************************************************************
+# Specify the locale that the Wrapper should use.  By default the system
+# locale is used.
+#wrapper.lang=en_US # en_US or ja_JP
+
+# Specify the location of the Wrapper's language resources.  If these are
+#  missing, the Wrapper defaults to the en_US locale.
+#wrapper.lang.folder=../lang
+
+#********************************************************************
+# Wrapper Java Properties
+#********************************************************************
+# Java Application
+#wrapper.java.command=C:\Program Files\Java\jre7\bin\java.exe
+#wrapper.java.command=/usr/java/latest/bin/java
+wrapper.java.command=java
+
+# Tell the Wrapper to log the full generated Java command line.
+#wrapper.java.command.loglevel=INFO
+
+# Java Main class.  This class must implement the WrapperListener interface
+#  or guarantee that the WrapperManager class is initialized.  Helper
+#  classes are provided to do this for you.  See the Integration section
+#  of the documentation for details.
+wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp
+
+#********************************************************************
+#Load the Java Classpath and additional properties from classpath.conf
+#
+#include ../conf/classpath.conf
+#********************************************************************
+
+# Java Library Path (location of Wrapper.DLL or libwrapper.so)
+wrapper.java.library.path.1=../libs
+
+# Java Additional Parameters
+wrapper.java.additional.1=-Djava.security.krb5.conf=../conf/krb5.ini
+wrapper.java.additional.2=-Djava.security.auth.login.config=../conf/login.conf
+wrapper.java.additional.3=-Djacorb.log.default.verbosity=0
+
+# Initial Java Heap Size (in MB)
+wrapper.java.initmemory=512
+
+# Maximum Java Heap Size (in MB)
+wrapper.java.maxmemory=1280
+
+# Application parameters.  Add parameters as needed starting from 1
+wrapper.app.parameter.1=com.ixiasoft.outputgenerator.corba.CORBAServer
+
+#********************************************************************
+# Wrapper Logging Properties
+#********************************************************************
+# Enables Debug output from the Wrapper.
+# wrapper.debug=TRUE
+
+# Format of output for the console.  (See docs for formats)
+wrapper.console.format=LTM
+
+# Log Level for console output.  (See docs for log levels)
+wrapper.console.loglevel=INFO
+
+# Log file to use for wrapper output logging.
+wrapper.logfile=../logs/wrapper.log
+
+# Format of output for the log file.  (See docs for formats)
+wrapper.logfile.format=LTM
+
+# Log Level for log file output.  (See docs for log levels)
+wrapper.logfile.loglevel=INFO
+
+# Maximum size that the log file will be allowed to grow to before
+#  the log is rolled. Size is specified in bytes.  The default value
+#  of 0, disables log rolling.  May abbreviate with the 'k' (kb) or
+#  'm' (mb) suffix.  For example: 10m = 10 megabytes.
+wrapper.logfile.maxsize=1m
+
+# Maximum number of rolled log files which will be allowed before old
+#  files are deleted.  The default value of 0 implies no limit.
+wrapper.logfile.maxfiles=25
+
+# Log Level for sys/event log output.  (See docs for log levels)
+wrapper.syslog.loglevel=NONE
+
+#********************************************************************
+# Wrapper General Properties
+#********************************************************************
+# Allow for the use of non-contiguous numbered properties
+wrapper.ignore_sequence_gaps=TRUE
+
+# Do not start if the pid file already exists.
+wrapper.pidfile.strict=TRUE
+
+#The Wrapper will print out the exact version of the JVM in the log
+wrapper.java.version.output=TRUE
+
+#This property will cause the Wrapper to dump all of the environment variables
+#visible to the Wrapper, along with where the values originated. It can be very
+# useful to help debug environment related problems.
+wrapper.environment.dump=FALSE
+
+#Description of the output of wrapper.environment.dump=TRUE
+#The debug output starts with a source column which shows where the environment was
+#set. The values, left-to-right, show the order of the sources from which they can
+#be set. The final value will be used.
+# P - Defined in the parent process, ie the variable was set when the Wrapper was launched.
+# S - Defined in the system-wide Registry. (Windows 2000 only)
+# A - Defined in the account specific Registry. (Windows 2000 only)
+# W - Defined by the Wrapper on startup.
+# C - Defined within the Wrapper configuration file.
+
+#Set the ping logging
+wrapper.ping.alert.loglevel=DEBUG
+wrapper.ping.interval.logged=60
+
+#********************************************************************
+# Wrapper Windows Console Properties
+#********************************************************************
+
+# Title to use when running as a console
+wrapper.console.title=OutGen
+
+#********************************************************************
+# Wrapper Windows NT/2000/XP Service Properties
+#********************************************************************
+# WARNING - Do not modify any of these properties when an application
+#  using this configuration file has been installed as a service.
+#  Please uninstall the service before modifying this section.  The
+#  service can then be reinstalled.
+
+# Name of the service
+wrapper.ntservice.name=OutGen
+
+# Display name of the service
+wrapper.ntservice.displayname=Ixiasoft Output Generator
+
+# Description of the service
+wrapper.ntservice.description=DITA CMS Output Generator
+
+# Service dependencies.  Add dependencies as needed starting from 1
+#wrapper.ntservice.dependency.1=
+
+# Mode in which the service is installed.  AUTO_START or DEMAND_START
+wrapper.ntservice.starttype=AUTO_START
+
+# Allow the service to interact with the desktop.
+wrapper.ntservice.interactive=false

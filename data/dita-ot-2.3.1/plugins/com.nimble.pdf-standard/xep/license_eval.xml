@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<license issuer="RenderX" issued="2006-09-06">
+   <licensee>
+      <person>Nikolai nikolai.golovyak@xmetal.com</person>
+      <organization>Justsystems</organization>
+   </licensee>
+   <product name="XEP">
+      <limit name="personal">1</limit>
+      <feature name="stamp"/>
+   </product>
+<signature>iQBVAgUARP4P9Pz8zkdesEfDAQFFTQIAhkTpTKeaI/B1XR+JR2BfF1sV/FzIt+BX
+zuykAJ2K7jWMU+to4JS67DOLBy5/V5FWkGiqt0Mx9RtyBez94SO0ww===SSnM</signature></license>

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?> 
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+	<group>
+		<!-- Topics -->
+		<public publicId="-//NMBL//DTD NMBL DITA Composite//EN" uri="dtd/NmblDitabase.dtd"/>
+
+		<!-- Maps -->
+		<public publicId="-//NMBL//DTD NMBL DITA Map//EN" uri="dtd/NmblMap.dtd"/>
+
+	</group>
+</catalog>

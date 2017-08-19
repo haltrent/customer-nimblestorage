@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To extend the list of available preprocessors, you must add the new preprocessors to
+     the client/preprocessors.xml file. If a preprocessor with the same name exists in both files, 
+	 the preprocessor in the client/preprocessors.xml file will be loaded.-->
+<preprocessors>
+
+	<!-- ================================================= -->
+	<!-- Example of the different types of user parameters -->
+	<!--                                                   -->
+	<!-- For the "index-list" and "index-choice" types,    -->
+	<!-- the @name attribute must match a string index     -->
+	<!-- from the index definition                         -->
+	<!--                                                   -->
+	<!-- @label and @tooltip are optional attributes       -->
+	<!-- for all types of parameter                        -->
+	<!--                                                   -->
+	<!-- @format is optional for all types except "date"   -->
+	<!-- see http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html -->
+
+	<!--
+	<user>
+		<parameter label="Sample text field" name="text.field" mandatory="false" type="string"/>
+		<parameter label="Sample text field with validation" name="text.field2" mandatory="false" type="string" format="[0-9]*[.][0-9]*[.][0-9]{3}" tooltip="2.3.009"/>
+		<parameter label="Sample date" name="date" mandatory="false" type="date" format="yyyy-MM-dd" tooltip="Format is yyyy-mm-dd"/>
+		<parameter label="Sample list" name="list" mandatory="false" type="list">
+			<value name="item1">Item 1</value>
+			<value name="item2">Item 2</value>
+		</parameter>
+		<parameter label="Sample choice" name="choice" mandatory="false" type="choice">
+			<value name="value1" _default="true">Value 1</value>
+			<value name="value2">Value 2</value>
+		</parameter>
+		<parameter label="Sample index-list (using audience)" name="audience" mandatory="false" type="index-list"/>
+		<parameter label="Sample index-choice (using platform)" name="platform" mandatory="false" type="index-choice"/>
+	</user>
+	-->
+
+	<!-- ================================================= -->
+
+	<!-- Preprocessors for DITA OT Output Types -->
+
+	<preprocessor name="dita2pdf" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor" >
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ot.xml"/>
+				<parameter name="target" value="dita2pdfwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="dita2htmlhelp" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor" >
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ot.xml"/>
+				<parameter name="target" value="dita2htmlhelpwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="dita2eclipsehelp" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor" >
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ot.xml"/>
+				<parameter name="target" value="dita2eclipsehelpwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="dita2xhtml" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor" >
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ot.xml"/>
+				<parameter name="target" value="dita2xhtmlwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<!-- Preprocessors for Ixiasoft Output Types -->
+
+	<preprocessor name="BuildManifest" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor" >
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-bmanifest.xml"/>
+				<parameter name="target" value="BuildManifest"/>
+				<parameter name="clean" value="bmanifest_job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+				<parameter name="support.ditaval" value="false" />
+				<!--<parameter name="onlyoutputtypelist" value="Dita2Pdf Dita2Htmlhelp" />-->
+				<!--<parameter name="override.userparams.Dita2Pdf" value="foobar=yes|action=dosomething"/>-->
+				<!--<parameter name="override.userparams.Dita2Htmlhelp" value="help=yes"/>-->
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="export" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ixia.xml"/>
+				<parameter name="target" value="export"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="support.ditaval" value="false" />
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="exportdrm" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ixia.xml"/>
+				<parameter name="target" value="exportdrm"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="support.ditaval" value="false" />
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<!-- Preprocessors for System Outputs : DO NOT MODIFY OR DELETE -->
+
+	<preprocessor name="dita2redlinepdf" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ixia.xml"/>
+				<parameter name="target" value="dita2redlinepdfwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="dita2reviewpdf" class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-ixia.xml"/>
+				<parameter name="target" value="dita2reviewpdfwrapper"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="false"/>
+				<!-- "keep.log.files" must be false otherwise it will not work -->
+			</system>
+		</parameters>
+	</preprocessor>
+
+	<!-- DEPRECATED -->
+	<preprocessor name="Conditions" class="com.ixiasoft.outputgenerator.preprocessor.ConditionalTextProcessor">
+		<parameters>
+			<system>
+				<!-- If multiple conditional filter values are chosen for the attribute,
+                     this will act as a Boolean operator. Options are OR | AND -->
+				<parameter name="operator" value="OR"/>
+			</system>
+			<!-- list of parameters user can supply -->
+			<user>
+				<parameter label="Audience" name="audience" mandatory="false" type="index-list"/>
+				<parameter label="Product" name="product" mandatory="false" type="index-list"/>
+				<parameter label="Platform" name="platform" mandatory="false" type="index-list"/>
+			</user>
+		</parameters>
+	</preprocessor>
+
+</preprocessors>

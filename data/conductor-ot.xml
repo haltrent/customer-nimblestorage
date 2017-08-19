@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="conductor-ot" default="" basedir=".">
+
+	<!-- Import basic init -->
+	<import file="outgen-init.xml"/>
+
+	<target name="dita2pdfwrapper" depends="default_dependencies, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>dita2pdfwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_pdfrenderer"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+		<antcall target="ot_build_keep_topicfo"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="pdf2"/>
+			<param name="args.rellinks" value="none"/>
+			<param name="args.draft" value="no"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build"  inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>dita2pdfwrapper</echoend>
+	</target>
+
+	<target name="dita2htmlhelpwrapper" depends="default_dependencies, flatten, resolve_container_keyref, extract_LowRes_images">
+		<echostart>dita2htmlhelpwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_htmlcompiler"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="htmlhelp"/>
+			<param name="args.htmlhelp.skipCompilation" value="no"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build"  inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>dita2htmlhelpwrapper</echoend>
+	</target>
+
+	<target name="dita2xhtmlwrapper" depends="default_dependencies, flatten, resolve_container_keyref, extract_LowRes_images">
+		<echostart>dita2xhtmlwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="xhtml"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build"  inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>dita2xhtmlwrapper</echoend>
+	</target>
+
+	<target name="dita2eclipsehelpwrapper" depends="default_dependencies, flatten, resolve_container_keyref, extract_LowRes_images">
+		<echostart>dita2eclipsehelpwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="eclipsehelp"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build"  inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>dita2eclipsehelpwrapper</echoend>
+	</target>
+
+</project>

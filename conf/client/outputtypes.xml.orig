@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Add your custom output types to this file -->
+
+<outputtypes>
+
+	<!-- If you define in this file an output type with the same name as an  -->
+	<!-- output type defined in conf/outputtypes.xml, the output type below  -->
+	<!-- overrides the output type defined in conf.                          -->
+	<!-- Output types with different names are added to the list of output   -->
+	<!-- types.                                                              -->
+
+	<!--<outputtype name="FooBar" timeout="600000" system="false">
+		<preprocessing>
+			<preprocessor name="foobar" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>-->
+
+</outputtypes>

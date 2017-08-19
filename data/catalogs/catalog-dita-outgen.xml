@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+<!--<nextCatalog catalog="../DITA-OT1.5.4/catalog-dita.xml"/>
+    <nextCatalog catalog="../DITA-OT1.8.5/catalog-dita.xml"/>
+    <nextCatalog catalog="../DITA-OT1.8.5-RN/plugins/com.ixiasoft.dita.dtd/catalog.xml"/>-->
+    <nextCatalog catalog="../dita-ot-2.3.1/catalog-dita.xml"/>
+    <!--<nextCatalog catalog="../dita-ot-2.1.1/catalog-dita.xml"/>-->
+
+</catalog>

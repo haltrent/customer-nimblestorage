@@ -1,0 +1,81 @@
+<?xml version="1.0" ?> 
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+	<group>
+		<!-- Topics -->
+		<public publicId="-//IXIA//DTD IXIA DITA Composite//EN" uri="dtd/IxiaDitabase.dtd"/>
+		<public publicId="-//IXIA//DTD DITA Referable-Content//EN" uri="dtd/referable-content.dtd"/>
+
+		<public publicId="-//IXIA//ELEMENTS DITA Referable-Content//EN" uri="dtd/referable-content.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA Variables//EN" uri="dtd/avDomain.mod"/>
+		<public publicId="-//IXIA//MODULE DITA Variables//EN" uri="dtd/ixiavariables.mod"/>
+		<public publicId="-//IXIA//ENTITIES DITA Localization Domain//EN" uri="dtd/localizationDomain.ent"/>
+		<public publicId="-//IXIA//ENTITIES DITA Variables//EN" uri="dtd/avDomain.ent"/>
+		<public publicId="-//IXIA//ENTITIES DITA Constants//EN" uri="dtd/IxiaConstants.ent"/>
+
+		<public publicId="-//IXIA//ELEMENTS IXIA DITA 1.2 Strict Paragraph Constraint//EN" uri="dtd/strictParaConstraint.mod"/>
+		<public publicId="-//IXIA//ELEMENTS IXIA DITA 1.2 Strict Section Constraint//EN" uri="dtd/strictSectionConstraint.mod"/>
+
+		<!-- Maps -->
+		<public publicId="-//IXIA//DTD IXIA DITA Map//EN" uri="dtd/IxiaMap.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS IXIA DITA Map//EN" uri="dtd/IxiaMap.mod"/>
+
+		<!-- Resource Maps -->
+		<public publicId="-//IXIA//DTD IXIA DITA Resource Package//EN" uri="dtd/IxiaResourcePackage.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS IXIA DITA Resource Package//EN" uri="dtd/IxiaResourcePackage.mod"/>
+
+		<!-- DITA CMS Internal Specializations -->
+		<public publicId="-//IXIA//DTD DITA CMS Image Metadata//EN" uri="dtd/image.dtd"/>
+		<public publicId="-//IXIA//DTD DITA CMS Resource Metadata//EN" uri="dtd/resource.dtd"/>
+		<public publicId="-//IXIA//DTD DITA CMS Project//EN" uri="dtd/project.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS multistream//EN" uri="dtd/MultiStream.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS imagemeta//EN" uri="dtd/Imagemeta.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS resourcemeta//EN" uri="dtd/resourcemeta.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS project//EN" uri="dtd/project.mod"/>
+
+		<!-- Snapshots -->
+		<public publicId="-//IXIA//DTD DITA CMS Snapshot//EN" uri="dtd/snapshot.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS Snapshot//EN" uri="dtd/snapshot.mod"/>
+		<public publicId="-//IXIA//ENTITIES DITA CMS Snapshot//EN" uri="dtd/snapshot.ent"/>
+
+		<!-- Build Manifest -->
+		<public publicId="-//IXIA//DTD DITA CMS Build Manifest//EN" uri="dtd/build-manifest.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS Build Manifest//EN" uri="dtd/build-manifest.mod"/>
+	</group>
+
+	<!-- DTDs for the Dynamic Release Management -->
+	<group>
+		<!-- Maps with container model -->
+		<public publicId="-//IXIA//DTD DITA Map for Release Management//EN" uri="dtd/IxiaMap-releasemanagement.dtd"/>
+
+		<!-- Container reference -->
+		<public publicId="-//IXIA//ENTITIES DITA 1.2 Container Reference Domain//EN" uri="dtd/releasemanagement/containerrefDomain.ent"/>
+		<public publicId="-//IXIA//ELEMENTS DITA 1.2 Container Reference Domain//EN" uri="dtd/releasemanagement/containerrefDomain.mod"/>
+
+		<!-- Constraints for href and conref -->
+		<!-- In the Output Generator, the constraint must be disabled or else the documents will become invalid 
+			 once the keyrefs will have been resolved. So all the public IDs are redefined here to point the same empty file. -->
+		<!-- DO NOT CHANGE the following definitions in OT plugin -->
+		<!-- DO NOT APPLY those definitions in the DITA CMS configuration -->
+		<public publicId="-//IXIA//ELEMENTS DITA Global Href Constraints//EN" uri="dtd/releasemanagement/constraint-null.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA Topic Href Constraints//EN" uri="dtd/releasemanagement/constraint-null.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA Map Href Constraints//EN" uri="dtd/releasemanagement/constraint-null.mod"/>
+
+		<!-- Containers and container parts -->
+		<public publicId="-//IXIA//DTD DITA Container//EN" uri="dtd/releasemanagement/container.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA Container//EN" uri="dtd/releasemanagement/container.mod"/>
+		<public publicId="-//IXIA//DTD DITA Container Part//EN" uri="dtd/releasemanagement/containerpart.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA Container Part//EN" uri="dtd/releasemanagement/containerpart.mod"/>
+
+		<!-- Products, Releases and Versions -->
+		<public publicId="-//IXIA//DTD DITA CMS Product//EN" uri="dtd/releasemanagement/product.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS Product//EN" uri="dtd/releasemanagement/product.mod"/>
+		<public publicId="-//IXIA//DTD DITA CMS Release//EN" uri="dtd/releasemanagement/release.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS Release//EN" uri="dtd/releasemanagement/release.mod"/>
+		<public publicId="-//IXIA//DTD DITA CMS Version//EN" uri="dtd/releasemanagement/version.dtd"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS Version//EN" uri="dtd/releasemanagement/version.mod"/>
+		<public publicId="-//IXIA//ELEMENTS DITA CMS ReleaseManagement//EN" uri="dtd/releasemanagement/release-management.mod"/>
+	</group>
+
+</catalog>

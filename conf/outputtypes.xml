@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To extend the list of available output types, add your custom output types to
+     conf/client/outputtypes.xml. If you define an output type with the same name as 
+	 an output type defined in conf/outputtypes.xml, the output type in conf/client 
+	 overrides the output type defined in conf -->
+<outputtypes>
+
+	<!-- DITA Open Toolkit Output Types -->
+
+	<outputtype name="Dita2Pdf" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2pdf" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Dita2htmlhelp" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2htmlhelp" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Dita2EclipseHelp" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2eclipsehelp" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Dita2xhtml" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2xhtml" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<!-- Ixiasoft Output Types -->
+
+	<outputtype name="Export" timeout="600000" system="false">
+		<preprocessing>
+			<preprocessor name="export" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Export [DRM]" timeout="600000" system="false">
+		<preprocessing>
+			<preprocessor name="exportdrm" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<!-- System Outputs : DO NOT MODIFY OR DELETE -->
+
+	<outputtype name="Dita2RedlinePdf" timeout="600000" system="true">
+		<preprocessing>
+			<preprocessor name="dita2redlinepdf" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Dita2ReviewPdf" timeout="600000" system="true">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED but used by the review PDF -->
+			<preprocessor name="Conditions"/>
+			<preprocessor name="dita2reviewpdf" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Dita2TranslationPdf" timeout="600000" system="true">
+		<preprocessing>
+			<preprocessor name="dita2pdf" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="Dita2xhtml.preview" timeout="600000" system="true">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2xhtml" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+	<outputtype name="BuildManifest" timeout="3600000" system="false">
+		<preprocessing>
+			<preprocessor name="BuildManifest" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+
+</outputtypes>

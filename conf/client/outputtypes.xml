@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Add your custom output types to this file -->
+
+<outputtypes>
+
+	<!-- If you define in this file an output type with the same name as an  -->
+	<!-- output type defined in conf/outputtypes.xml, the output type below  -->
+	<!-- overrides the output type defined in conf.                          -->
+	<!-- Output types with different names are added to the list of output   -->
+	<!-- types.                                                              -->
+
+	<outputtype name="WebHelp-Oxygen-Default" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2webhelp-responsive" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+	
+
+	<outputtype name="PDF-Nimble-Standard" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2nimble-pdf-standard" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+	
+
+	<outputtype name="PDF-Nimble-Hardcopy" timeout="600000" system="false">
+		<preprocessing>
+			<!-- "Conditions" preprocessor is DEPRECATED -->
+			<!--<preprocessor name="Conditions"/>-->
+			<preprocessor name="dita2nimble-pdf-hardcopy" />
+		</preprocessing>
+		<renderer/>
+	</outputtype>
+	
+	
+	
+
+</outputtypes>

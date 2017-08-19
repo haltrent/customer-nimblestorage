@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="conductor-ixia" default="" basedir=".">
+
+	<!-- Import basic init -->
+	<import file="outgen-init.xml"/>
+
+	<target name="export" depends="default_dependencies">
+		<echostart>export</echostart>
+
+		<!-- Copy source files to output directory -->
+		<copydir src="${outgen.job.dir}/content" dest="${outgen.job.output.dir}/content"/>
+
+		<if>
+			<isset property="outgen.job.ditaval.filename"/>
+			<then>
+				<copy file="${outgen.job.ditaval.filename}" todir="${outgen.job.output.dir}"/>
+			</then>
+		</if>
+
+		<echoend>export</echoend>
+	</target>
+
+	<target name="exportdrm" depends="default_dependencies, add_keydefs, export"/>
+
+	<target name="export_outputstructure" depends="default_dependencies">
+		<echostart>export_outputstructure</echostart>
+
+		<!-- Copy source files to output directory -->
+		<copy todir="${outgen.job.output.dir}">
+			<fileset dir="${outgen.job.dir}">
+				<exclude name="${outgen.job.output.dir}/**"/>
+				<exclude name="*.html"/>
+				<exclude name="*.htm"/>
+			</fileset>
+		</copy>
+
+		<echoend>export_outputstructure</echoend>
+	</target>
+
+	<target name="dita2reviewpdfwrapper" depends="default_dependencies, getobjecttype, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>dita2reviewpdfwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_pdfrenderer"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="${outgen.job.source.objtype}-review-pdf"/>
+			<param name="args.rellinks" value="all"/>
+			<param name="args.draft" value="yes"/>
+			<param name="clean.temp" value="yes"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build" inheritRefs="true">
+			<param name="outgen.job.keep.topicfo" value="no"/>
+		</antcall>
+
+		<property name="job.clean.outputdir" value="yes"/>
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>dita2reviewpdfwrapper</echoend>
+	</target>
+
+	<target name="dita2redlinepdfwrapper" depends="default_dependencies, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>dita2redlinepdfwrapper</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename" location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename" location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_pdfrenderer"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+
+		<!-- Check if a redline.ditaval exist in the resources/client folder and use
+			 it otherwise fall back on the supply by IXIASOFT -->
+		<if>
+			<available file="${outgen.resources.dir.client}/redline.ditaval"/>
+			<then>
+				<property name="job.ditaval.filename" location="${outgen.resources.dir.client}/redline.ditaval"/>
+			</then>
+			<else>
+				<property name="job.ditaval.filename" location="${outgen.resources.dir}/redline.ditaval"/>
+			</else>
+		</if>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="map-review-pdf"/>
+			<param name="args.rellinks" value="none"/>
+			<param name="args.draft" value="no"/>
+			<param name="args.filter" value="${job.ditaval.filename}"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build" inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<!--<property name="job.keep.temp" value="yes"/>-->
+
+		<echoend>dita2redlinepdfwrapper</echoend>
+	</target>
+
+</project>

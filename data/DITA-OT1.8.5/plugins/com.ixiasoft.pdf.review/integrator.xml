@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project name="com.ixiasoft.pdf.review">
+	<target name="dita2topic-review-pdf.init">
+		<property name="customization.dir" location="${dita.plugin.com.ixiasoft.pdf.review.dir}/cfg.topic"/>
+	</target>
+	<target name="dita2topic-review-pdf" depends="dita2topic-review-pdf.init, dita2pdf2"/>
+	<target name="dita2map-review-pdf.init">
+		<property name="customization.dir" location="${dita.plugin.com.ixiasoft.pdf.review.dir}/cfg.map"/>
+	</target>
+	<target name="dita2map-review-pdf" depends="dita2map-review-pdf.init, dita2pdf2"/>
+</project>

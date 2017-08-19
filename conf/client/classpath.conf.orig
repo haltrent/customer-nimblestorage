@@ -1,0 +1,18 @@
+#encoding=UTF-8
+# Configuration files must begin with a line specifying the encoding
+#  of the the file.
+
+#********************************************************************
+#For more information 
+#
+#http://wrapper.tanukisoftware.org
+#********************************************************************
+
+#********************************************************************
+# Customer-specific Classpath Properties
+#********************************************************************
+
+# Java Classpath for customer-specific libraries
+# Add class path elements as needed starting from 100
+
+#wrapper.java.classpath.100=../libs/client/foobar.jar

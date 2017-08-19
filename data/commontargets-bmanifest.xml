@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="commontargets-bmanifest" default="" basedir=".">
+	<!-- Dump all bmanifest variables -->
+	<target name="bmanifest_echo_properties">
+		<local name="suffix"/>
+		<local name="tstime"/>
+		<if>
+			<isset property="label"/>
+			<then>
+				<property name="suffix" value="_${label}" />
+			</then>
+			<else>
+				<property name="suffix" value="" />
+			</else>
+		</if>
+
+		<echostart>bmanifest_echo_properties ${suffix}</echostart>
+
+		<tstamp>
+			<format property="tstime" pattern="HH"/>
+		</tstamp>
+		<property name="file" location="${bmanifest.global.dir}/${outgen.job.source.name.noext}.ant-bmanifest.${tstime}_${suffix}.properties"/>
+		<echolog>The properties are saved in ${file}</echolog>
+
+		<echoproperties destfile="${file}" failonerror="true">
+			<propertyset>
+				<propertyref prefix="bmanifest."/>
+				<propertyref prefix="outgen."/>
+				<propertyref prefix="hostname"/>
+				<propertyref prefix="env."/>
+			</propertyset>
+		</echoproperties>
+
+		<echoend>bmanifest_echo_properties ${suffix}</echoend>
+	</target>
+
+	<target name="bmanifest_job_postprocess">
+		<echostart>bmanifest_job_postprocess</echostart>
+
+		<!-- Cleans the output temp folder unless prevented by ${bmanifest.job.keep.temp} -->
+		<if>
+			<istrue value="${bmanifest.job.keep.temp}"/>
+			<then>
+				<echocaution>bmanifest_job_postprocess task is disabled; property bmanifest.job.keep.temp set to "yes"</echocaution>
+			</then>
+			<else>
+				<delete dir="${bmanifest.global.dir}" failonerror="false"/>
+				<echodebug>bmanifest_job_postprocess has deleted the folder "${bmanifest.global.dir}" defined by $${bmanifest.global.dir}</echodebug>
+			</else>
+		</if>
+
+		<echoend>bmanifest_job_postprocess</echoend>
+	</target>
+
+	<target name="bmanifest_loadproperties">
+		<echostart>bmanifest_loadproperties</echostart>
+		<local name="propertiesfile"/>
+		<!-- Let's get all variables from the property file created by the BM packager --> 
+		<property name="propertiesfile" location="${outgen.temp.dir}/${outgen.job.foldername}/${outgen.job.source.collection}/bmanifest-idmant.properties" />
+		<echodebug>Loading Build Manifest property file ${propertiesfile}</echodebug>
+		<!-- Need to rename the property from the property file to the running process
+			 This can be removed if we change the code for the build manifest packager -->
+		<loadproperties srcFile="${propertiesfile}">
+			<filterchain>
+				<tokenfilter>
+					<replacestring from="bmanifest.default.ditaval=" to="bmanifest.global.ditaval.relative="/>
+					<replacestring from="bmanifest.default.languages=" to="bmanifest.global.languages.list="/>
+					<replacestring from="bmanifest.localizedmap=" to="bmanifest.localizedmap="/>
+					<replacestring from="bmanifest.default.properties=" to="bmanifest.global.userparams="/>
+					<replacestring from="bmanifest.fullpath=" to="bmanifest.file.relative="/>
+					<replacestring from="bmanifest.ouputtypesids=" to="bmanifest.ouputtypes.list="/>
+					<replacestring from="bmanifest.rootmap=" to="bmanifest.map.relative="/>
+					<replacestring from="bmanifest.rootmapname=" to="bmanifest.map.name="/>
+					<replacestring from="bmanifest.rootmapnoext=" to="bmanifest.map.name.noext="/>
+					<replacestring from="bmanifest.notify=" to="bmanifest.notify.email="/>
+				</tokenfilter>
+			</filterchain>
+		</loadproperties>
+		<echoend>bmanifest_loadproperties</echoend>
+	</target>
+
+	<target name="bmanifest_smtp_loadproperties">
+		<echostart>bmanifest_smtp_loadproperties</echostart>
+
+		<echolog>Found the client resource files ${outgen.resources.dir.client}/buildmanifest.smtp.properties</echolog>
+		<loadproperties srcFile="${outgen.resources.dir.client}/buildmanifest.smtp.properties"/>
+
+		<echoend>bmanifest_smtp_loadproperties</echoend>
+	</target>
+
+	<target name="bmanifest_check_notify_properties" depends="bmanifest_smtp_loadproperties">
+		<echostart>bmanifest_check_notify_properties</echostart>
+
+		<checkmatch setproperty="bmanifest.notify.smtp.mailhost.valid" 
+					checkproperty="bmanifest.smtp.mailhost" 
+					pattern="^\S+$" 
+					errormessage="The property $${bmanifest.smtp.mailhost} shouldn't have spaces before or after"/>
+
+		<checkmatch setproperty="bmanifest.notify.smtp.mailport.valid" 
+					checkproperty="bmanifest.smtp.mailport" 
+					pattern="\d+$" 
+					errormessage="The property $${bmanifest.smtp.mailport} can contain only number and no space before or after"/>
+
+		<checkmatch setproperty="bmanifest.notify.smtp.subject.valid" 
+					checkproperty="bmanifest.smtp.subject" 
+					pattern="\S+" 
+					errormessage="The property $${bmanifest.smtp.subject} should contain at least one word"/>
+
+		<!-- Must contain a least one string that looks like a@a.a 
+			 Cannot create a regex to fully validate a real email address
+			 Supports a list separated by commas as well as names with format: Name <a@a.aa> -->
+		<checkmatch setproperty="bmanifest.notify.email.valid" 
+					checkproperty="bmanifest.notify.email" 
+					pattern="\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}\b" 
+					errormessage="The notify field in your build manifest is invalid. ${line.separator}
+								  Please see the documentation for the valid format"/>
+
+		<!-- This only checks if the property is set or not. It cannot validate if the target exists or not. 
+			 ANT has no facility to do that cleanly except using jscript -->
+		<checkmatch setproperty="bmanifest.notify.smtp.ant.target.valid" 
+					checkproperty="bmanifest.smtp.ant.target" 
+					pattern="^\S+$" 
+					errormessage="The property $${bmanifest.smtp.ant.target} shouldn't have spaces before or after"/>
+
+		<!-- Check if the file that contains the message body exists -->
+		<if>
+			<and>
+				<isset property="bmanifest.smtp.message.file"/>
+				<available file="${bmanifest.smtp.message.file}"/>
+			</and>
+			<then>
+				<property name="bmanifest.smtp.message.file.valid" value="true"/>
+			</then>
+			<else>
+				<property name="bmanifest.smtp.message.file.valid" value="false"/>
+				<echoerror>The file ${bmanifest.smtp.message.file} doesn't exist.</echoerror>
+			</else>
+		</if>
+
+		<condition property="bmanifest.notify.properties.valid">
+			<and>
+				<istrue value="${bmanifest.notify.smtp.mailhost.valid}"/>
+				<istrue value="${bmanifest.notify.smtp.mailport.valid}"/>
+				<istrue value="${bmanifest.notify.smtp.subject.valid}"/>
+				<istrue value="${bmanifest.notify.email.valid}"/>
+				<istrue value="${bmanifest.notify.smtp.ant.target.valid}"/>
+				<istrue value="${bmanifest.smtp.message.file.valid}"/>
+			</and>
+		</condition>
+		<echoend>bmanifest_check_notify_properties</echoend>
+	</target>
+
+	<target name="bmanifest_notify" depends="bmanifest_notify_init, bmanifest_notify_ixiasoft"/>
+
+	<extension-point name="bmanifest_notify_init" depends=""/>
+
+	<target name="bmanifest_notify_ixiasoft" >
+		<echostart>bmanifest_notify_ixiasoft</echostart>
+
+		<setvalueifnotset property="bmanifest.smtp.property.filename" value="${outgen.resources.dir.client}/buildmanifest.smtp.properties"/>
+		<!-- Need to check if the notify field was set in the build manifest -->
+		<if>
+			<isset property="bmanifest.notify.email"/>
+			<then>
+				<!-- Check if the smtp property file exists -->
+				<if>
+					<available file="${bmanifest.smtp.property.filename}" />
+					<then>
+						<!-- Good to go, the next target will validate the content of all smtp properties -->
+						<antcall target="bmanifest_notify_action"/>
+					</then>
+					<else>
+						<!-- Cannot proceed because smtp file doesn't exist -->
+						<echoerror>Cannot run "notify" because this file cannot be found: ${outgen.resources.dir.client}/bmanifest.smtp.properties}</echoerror>
+					</else>
+				</if>
+			</then>
+			<else>
+				<!-- Nothing to do -->
+				<echolog>Nobody to notify</echolog>
+			</else>
+		</if>
+
+		<echoend>bmanifest_notify_ixiasoft</echoend>
+	</target>
+
+	<target name="bmanifest_notify_action" depends="bmanifest_check_notify_properties">
+		<echostart>bmanifest_notify_action</echostart>
+		<if>
+			<isset property="bmanifest.notify.properties.valid"/>
+			<then>
+				<antcall target="${bmanifest.smtp.ant.target}" inheritAll="false">
+					<propertyset>
+						<propertyref prefix="bmanifest.smtp"/>
+						<mapper type="glob" from="bmanifest.smtp*" to="outgen.smtp*"/>
+					</propertyset>
+					<propertyset>
+						<propertyref name="bmanifest.notify.email"/>
+						<mapper type="glob" from="bmanifest.notify.email" to="outgen.smtp.to.addresses"/>
+					</propertyset>	
+				</antcall>
+			</then>
+			<else>
+				<echoerror>Cannot send notification. Please check previous error(s)</echoerror>
+			</else>
+		</if>
+		<echoend>bmanifest_notify_action</echoend>
+	</target>
+
+	<target name="bmanifest_preprocessor_userparams">
+		<echostart>bmanifest_preprocessor_userparams</echostart>
+		<!-- Need to parse a string in the format key1;value1,key2;value2 to create
+			 a list of key1=value1 ${line.separator} key2=value2. This list will be loaded
+			 as a list of properties with the prefix bmanifest.output.userparams. -->
+		<!-- This is only when it is set by the preprocessor 
+			 Create a system param with the name override.userparams.youroutputtype
+			 ie.: <parameter name="override.userparams.dita2pdf" value="draft.comment=no|watermark=no" />-->
+
+		<local name="local.outputtype"/>
+		<!-- Need to use a trick to double expand properties because this construct is
+			 not supported by default ${outgen.preprocessor.override.userparams.${bmanifest.output.outputtype}} -->
+		<setexpandproperty setproperty="local.outputtype" fromproperty="outgen.preprocessor.override.userparams.${bmanifest.output.outputtype}"/>
+		<echodebugprop name="local.outputtype"/>
+		<if>
+			<isset property="local.outputtype"/>
+			<then>
+				<echocaution>Overriding some user parameters</echocaution>
+				<for list="${local.outputtype}" delimiter="|" param = "prop">
+					<sequential>
+						<loadproperties>
+							<string value="@{prop}"/>
+							<filterchain>
+								<prefixlines prefix="bmanifest.output.userparams."/>
+							</filterchain>
+						</loadproperties>
+					</sequential>
+				</for>
+			</then>
+		</if>
+		<!-- Need to parse a string in the format key1;value1,key2;value2 to create
+			 a list of key1=value1 ${line.separator} key2=value2. This list will be loaded
+			 as a list of properties with the prefix bmanifest.output.userparams. -->
+		<!-- TODO Bugzilla 2859 the user param string will change from key1;value1,key2;value2
+			 to key1=value1|key2=value2 -->
+		<for list="${bmanifest.output.userparams}" delimiter="," param = "KeyValuePair">
+			<sequential>
+				<loadproperties>
+					<string value="@{KeyValuePair}"/>
+					<filterchain>
+						<tokenfilter>
+							<replacestring from=";" to="="/>
+						</tokenfilter>
+						<prefixlines prefix="bmanifest.output.userparams."/>
+					</filterchain>
+				</loadproperties>
+			</sequential>
+		</for>
+
+		<!-- Define an id for this list of properties -->
+		<propertyset id="bmanifest.output.userparams.id">
+			<propertyref prefix="bmanifest.output.userparams."/>
+		</propertyset>
+		<echoend>bmanifest_preprocessor_userparams</echoend>
+	</target>
+
+	<target name="bmanifest_preprocessor_systemparams">
+		<echostart>bmanifest_preprocessor_systemparams</echostart>
+		<!-- Need to parse a string in the format key1;value1,key2;value2 to create
+			 a list of key1=value1 ${line.separator} key2=value2. This list will be loaded
+			 as a list of properties with the prefix bmanifest.output.systemparams. -->
+		<!-- TODO Bugzilla 2859 the user param string will change from key1;value1,key2;value2
+			 to key1=value1|key2=value2 -->
+		<for list="${bmanifest.output.systemparams}" delimiter="," param = "KeyValuePair">
+			<sequential>
+				<loadproperties>
+					<string value="@{KeyValuePair}"/>
+					<filterchain>
+						<tokenfilter>
+							<replacestring from=";" to="="/>
+						</tokenfilter>
+						<prefixlines prefix="bmanifest.output.systemparams."/>
+					</filterchain>
+				</loadproperties>
+			</sequential>
+		</for>
+
+		<!-- Define an id for this list of properties -->
+		<propertyset id="bmanifest.output.systemparams.id">
+			<propertyref prefix="bmanifest.output.systemparams."/>
+		</propertyset>
+		<echoend>bmanifest_preprocessor_systemparams</echoend>
+	</target>
+</project>

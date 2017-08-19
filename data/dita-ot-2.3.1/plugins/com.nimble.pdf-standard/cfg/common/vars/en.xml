@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vars xmlns="http://www.idiominc.com/opentopic/vars">
+    <!-- The footer that appears on odd-numbered pages. -->
+    <variable id="Body odd footer"><param ref-name="pagenum"/></variable>
+
+    <!-- The footer that appears on even-numbered pages. -->
+    <variable id="Body even footer"><param ref-name="pagenum"/></variable>
+
+    <!-- The footer that appears on the first page of a chapter. -->
+    <variable id="Body first footer"><param ref-name="pagenum"/></variable>
+
+    <!-- The header that appears on odd-numbered pages. -->
+    <variable id="Body odd header"><param ref-name="heading"/>&#xA0;<param ref-name="heading-2"/></variable>
+
+    <!-- The header that appears on even-numbered pages. -->
+    <variable id="Body even header"><param ref-name="heading"/>&#xA0;<param ref-name="heading-2"/></variable>
+    <!-- The header that appears on the odd-numbered table of contents
+         pages. -->
+    <variable id="Toc odd header"><param ref-name="prodname"/></variable>
+
+    <!-- The header that appears on the odd-numbered table of contents
+         pages. -->
+    <variable id="Toc even header"><param ref-name="pagenum"/></variable>
+    <!-- The header that appears on the odd-numbered index pages. -->
+    <variable id="Index odd header"><param ref-name="prodname"/></variable>
+
+    <!-- The header that appears on the even-numbered index pages. -->
+    <variable id="Index even header"><param ref-name="prodname"/></variable>
+
+    <!-- The formatting used to display ordered lists (e.g., "1., 2." or
+         "1), 2)" -->
+    <variable id="Ordered List Number"><param ref-name="number"/> </variable>
+    <!-- The string used to label an appendix within the table of contents. -->
+    <variable id="Table of Contents Appendix">Addendum</variable>
+    <!-- Text to use for appendix titles.-->
+    <variable id="Appendix with number">Addendum</variable>
+
+    <!-- Image path to use for a note of "note" type. -->
+    <variable id="note Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+    <!-- Image path to use for a note of "notice" type. -->
+    <variable id="notice Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <!-- Image path to use for a note of "fastpath" type. -->
+    <variable id="fastpath Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <!-- Image path to use for a note of "important" type. -->
+    <variable id="important Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <!-- Image path to use for a note of "remember" type. -->
+    <variable id="remember Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <!-- Image path to use for a note of "restriction" type. -->
+    <variable id="restriction Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <!-- Image path to use for a note of "tip" type. -->
+    <variable id="tip Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <!-- Image path to use for a note of "other" type. -->
+    <variable id="other Note Image Path">Customization/OpenTopic/common/artwork/g_Note.svg</variable>
+
+    <variable id="Nimble Caution">Caution</variable>
+
+    <variable id="Nimble NimbleStorage">Nimble Storage</variable>
+
+    <variable id="Nimble Nimble">Nimble</variable>
+
+    <variable id="Nimble CS1000">CS1000</variable>
+
+    <variable id="Nimble CS1000H">CS1000H</variable>
+
+    <variable id="Nimble CS3000">CS3000</variable>
+
+    <variable id="Nimble CS5000">CS5000</variable>
+
+    <variable id="Nimble CS7000">CS7000</variable>
+
+    <variable id="Nimble AF1000">AF1000</variable>
+
+    <variable id="Nimble AF3000">AF3000</variable>
+
+    <variable id="Nimble AF5000">AF5000</variable>
+
+    <variable id="Nimble AF7000">AF7000</variable>
+
+    <variable id="Nimble AF9000">AF9000</variable>
+
+    <variable id="Nimble AFS2">AFS2</variable>
+
+    <variable id="Nimble ES2-AFS2">ES2-AFS2</variable>
+
+    <variable id="Nimble ES2-H">ES2-H</variable>
+
+    <variable id="Nimble AllFlash">All Flash</variable>
+
+    <variable id="Nimble AdaptiveFlash">Adaptive Flash</variable>
+
+    <variable id="Nimble NimbleOS">NimbleOS</variable>
+
+    <variable id="Nimble StoragePool">Storage Pool</variable>
+
+    <variable id="Nimble VolumeCollection">Volume Collection</variable>
+
+    <variable id="Nimble System">System</variable>
+
+    <variable id="Nimble NimbleIndex">Nimble Index</variable>
+
+    <variable id="Nimble Array">Array</variable>
+
+    <variable id="Nimble Autosupport">Diagnostics for Nimble Analytics</variable>
+
+    <variable id="Nimble ASUP">DNA</variable>
+
+    <variable id="Nimble VolumeMove">Volume Migration</variable>
+
+    <variable id="Nimble CASL">CASL</variable>
+</vars>

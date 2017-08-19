@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="commontargets-macros" default="" basedir=".">
+
+	<macrodef name="setexpandproperty">
+		<attribute name="setproperty"/>
+		<attribute name="fromproperty"/>
+		<sequential>
+			<echodebug>FROM @{fromproperty}</echodebug>
+			<echodebug>SET @{setproperty}</echodebug>
+			<if>
+				<isset property="@{fromproperty}"/>
+				<then>
+					<property name="@{setproperty}" value="${@{fromproperty}}"/>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setvalueifnotset">
+		<attribute name="property"/>
+		<attribute name="value"/>
+		<sequential>
+			<if>
+				<not>
+					<isset property="@{property}"/>
+				</not>
+				<then>
+					<property name="@{property}" value="@{value}"/>
+					<echocaution>Setting the property $${@{property}} to the value "@{value}"</echocaution>
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="setdefaultvalueifblank">
+		<attribute name="property"/>
+		<attribute name="default"/>
+		<attribute name="ifblank"/>
+		<sequential>
+			<if>
+				<equals arg1="@{ifblank}" arg2="" trim="true"/>
+				<then>
+					<property name="@{property}" value="@{default}"/>
+					<echolog>Setting the property $${@{property}} to the value "@{default}"</echolog>
+				</then>
+				<else>
+					<property name="@{property}" value="@{ifblank}"/>
+					<echolog>Setting the property $${@{property}} to the value "@{ifblank}"</echolog>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+	<!--
+	Check if the param is defined otherwise use the global value
+	The "xyz" can be either "file", "template" or "log"
+
+	job.build.xyz    outgen.job.build.xyz   value
+	=============================================
+	defined          undefined              job.build.xyz
+	undefined        defined				outgen.job.builx.xyz
+	defined          defined                job.build.xyz
+	undefined        undefined              Failed
+	-->
+
+	<macrodef name="otbuildparamfile">
+		<attribute name="local"/>
+		<attribute name="global"/>
+		<sequential>
+			<if>
+				<isset property="@{local}"/>
+				<then>
+					<echolog>Parameter @{local} is set to value ${@{local}}</echolog>
+				</then>
+				<else>
+					<if>
+						<isset property="@{global}"/>
+						<then>
+							<property name="@{local}" value="${@{global}}"/>
+							<echolog>Parameter @{local} is set to value ${@{global}}</echolog>
+						</then>
+						<else>
+							<fail>The property "@{local}" or "@{global}" MUST have a value</fail>
+						</else>
+					</if>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echolog">
+		<text name="text"/>
+		<sequential>
+			<echo level="info">@{text}</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echocaution">
+		<text name="text"/>
+		<sequential>
+			<echo level="warning">@{text}</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echoerror">
+		<text name="text"/>
+		<sequential>
+			<echo level="error">ERROR: @{text}</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echodebug">
+		<text name="text"/>
+		<sequential>
+			<echo level="debug">DEBUG: @{text}</echo>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echostart">
+		<text name="text"/>
+		<sequential>
+			<echolog>Target start [@{text}] in file [${ant.project.name}.xml]</echolog>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="echoend">
+		<text name="text"/>
+		<sequential>
+			<echolog>Target end [@{text}] in file [${ant.project.name}.xml]</echolog>
+		</sequential>
+	</macrodef>
+
+
+	<macrodef name="echodebugprop">
+		<attribute name="name"/>
+		<sequential>
+			<if>
+				<isset property="@{name}"/>
+				<then>
+					<if>
+						<equals arg1="${@{name}}" arg2="" trim="true"/>
+						<then>
+							<echodebug>The property $${@{name}} is $${empty}</echodebug>
+						</then>
+						<else>
+							<echodebug>The property $${@{name}} has the value ${@{name}}</echodebug>
+						</else>
+					</if>
+				</then>
+				<else>
+					<echodebug>The property $${@{name}} is NOT SET</echodebug>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="checkmatch">
+		<attribute name="checkproperty"/>
+		<attribute name="setproperty"/>
+		<attribute name="pattern"/>
+		<attribute name="errormessage"/>
+		<sequential>
+			<if>
+				<and>
+					<isset property="@{checkproperty}"/>
+					<matches string="${@{checkproperty}}" pattern="@{pattern}" casesensitive="false"/>
+				</and>
+				<then>
+					<property name="@{setproperty}" value="true"/>
+				</then>
+				<else>
+					<property name="@{setproperty}" value="false"/>
+					<echoerror>@{errormessage}</echoerror>
+				</else>
+			</if>
+		</sequential>
+	</macrodef>
+</project>

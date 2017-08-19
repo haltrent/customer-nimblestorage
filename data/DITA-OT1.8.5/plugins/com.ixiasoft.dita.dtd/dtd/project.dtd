@@ -1,0 +1,117 @@
+<!-- ============================================================= -->
+<!--                    HEADER                                     -->
+<!-- ============================================================= -->
+<!--  MODULE:    IXIA CMS PROJECT DTD                              -->
+<!--  VERSION:   1.3                                               -->
+<!--  DATE:      February 2005                                     -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    PUBLIC DOCUMENT TYPE DEFINITION            -->
+<!--                    TYPICAL INVOCATION                         -->
+<!--                                                               -->
+<!--  Refer to this file by the following public identfier or an 
+      appropriate system identifier 
+PUBLIC "-//IXIA//DTD DITA CMS Project//EN"
+      Delivered as file "project.dtd"                              -->
+
+<!-- ============================================================= -->
+<!-- SYSTEM:     Darwin Information Typing Architecture (DITA)     -->
+<!--                                                               -->
+<!-- PURPOSE:    Base DTD holding project definition               -->
+<!--             used by IXIASOFT DITA CMS                         -->
+<!--                                                               -->
+<!-- ORIGINAL CREATION DATE:                                       -->
+<!--             September 2010                                    -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    CONSTANTS ENTITY DECLARATIONS              -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ENTITY DECLARATIONS                 -->
+<!-- ============================================================= -->
+
+<!ENTITY % indexing-d-dec
+  PUBLIC "-//OASIS//ENTITIES DITA Indexing Domain//EN" 
+         "../../../dtd/base/dtd/indexingDomain.ent"
+>%indexing-d-dec;
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE DECLARATIONS              -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN EXTENSIONS                          -->
+<!-- ============================================================= -->
+<!--                    One for each extended base element, with
+                        the name of the domain(s) in which the
+                        extension was declared                     -->
+
+<!ENTITY % index-base   "index-base | 
+                         %indexing-d-index-base;
+						">
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE EXTENSIONS                -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    TOPIC NESTING OVERRIDE                     -->
+<!-- ============================================================= -->
+<!--                    Redefine the infotype entity to exclude 
+                        other topic types and disallow nesting     -->
+
+<!ENTITY % info-types   "no-topic-nesting"                           >
+
+
+<!-- ============================================================= -->
+<!--                    DOMAINS ATTRIBUTE OVERRIDE                 -->
+<!-- ============================================================= -->
+<!--                    Must be declared ahead of the DTDs, which
+                        puts @domains first in order               -->
+
+<!ENTITY included-domains 
+                        "&indexing-d-att;"                           >
+
+
+<!-- ============================================================= -->
+<!--                    TOPIC ELEMENT INTEGRATION                  -->
+<!-- ============================================================= -->
+
+<!--                    Embed topic to get generic elements        -->
+<!ENTITY % topic-type
+  PUBLIC "-//OASIS//ELEMENTS DITA Topic//EN" 
+         "../../../dtd/base/dtd/topic.mod"
+>%topic-type;
+
+<!ENTITY % project-typemod 
+  PUBLIC "-//IXIA//ELEMENTS DITA CMS project//EN"
+         "project.mod"
+>%project-typemod;
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ELEMENT INTEGRATION                 -->
+<!-- ============================================================= -->
+
+<!ENTITY % indexing-d-def
+  PUBLIC "-//OASIS//ELEMENTS DITA Indexing Domain//EN" 
+         "../../../dtd/base/dtd/indexingDomain.mod"
+>%indexing-d-def;
+
+
+<!-- ============================================================= -->
+<!--                    SPECIALIZATION ATTRIBUTES                  -->
+<!-- ============================================================= -->
+
+
+<!-- ================== End IXIA CMS PROJECT DTD  ================ -->

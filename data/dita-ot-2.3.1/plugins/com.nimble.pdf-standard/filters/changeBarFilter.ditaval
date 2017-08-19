@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<val>
+    <!-- Casablanca change -->
+    <!--<revprop val="2.3" action="flag" color="black" backcolor="pink"/>-->
+    
+    <!--<revprop val="GA" action="flag" color="black" backcolor="pink"/>-->
+    <!--<revprop val="RC" action="flag" color="black" backcolor="yellow"/>-->
+    
+    <!-- From Nimble Conditions -->
+    <!--<revprop val="chg" action="flag" changebar="style:solid;width:1pt;offset:5pt;color:red" />
+    <revprop val="red" action="flag" color="red" />
+    
+    <prop att="rev" val="shaded" color="black" backcolor="#ffffe0" action="flag"><startflag><alt-text></alt-text></startflag><endflag><alt-text></alt-text></endflag></prop>
+    
+    <prop att="rev" val="bestprac" color="black" action="flag"><startflag><alt-text>Best practice:  </alt-text></startflag><endflag><alt-text> </alt-text></endflag></prop>
+    
+    <prop att="rev" val="newfeat" action="flag"><startflag imageref="../new_feature_icon.gif"></startflag></prop>-->
+    
+    <prop att="audience" val="cli" action="include" />
+    <prop att="audience" val="gui" action="include" />
+    <prop att="audience" val="tech" action="exclude" />
+    <prop att="audience" val="admin" action="include" />
+    
+    <prop att="platform" val="include" action="include" />
+    <prop att="platform" val="exclude" action="exclude" />
+    
+    <prop att="product" val="brighton" action="exclude" />
+    <prop att="product" val="b-stream" action="exclude" />
+    <prop att="product" val="c-stream" action="include" />
+    <prop att="product" val="future" action="exclude" />
+    
+    <prop att="otherprops" val="Print" action="include" />
+    <prop att="otherprops" val="Help" action="exclude" />
+    
+    <revprop val="RC" action="include"/>
+    <revprop val="GA" action="passthrough"/>
+    
+</val>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Clients wishing to extends the list of available input types should add their input type to
+     client/inputtypes.xml. If a duplicate name is inserted, all types will be shown.-->
+<inputtypes>
+</inputtypes>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Clients wishing to extends the list of available renderers should add their renderer to
+     client/renderers.xml. If a duplicate name is inserted, client one will be loaded.-->
+<renderers>
+	<renderer name="renderx" instance="1" class="com.ixiasoft.outputgenerator.renderers.Renderex"/>
+	<renderer name="fop" instance="1" class="com.ixiasoft.outputgenerator.renderers.Fop"/>
+</renderers>

@@ -1,0 +1,34 @@
+<?xml version="1.0" ?> 
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+	<group>
+		<!-- MathML 3.0 DTDs and modules -->
+		<public publicId="-//W3C//DTD MathML 3.0//EN" uri="dtd/mathml3.dtd"/>
+		<public publicId="-//W3C//ENTITIES MathML 3.0 Qualified Names 1.0//EN" uri="dtd/mathml3-qname.mod"/>
+
+		<!-- MathML Character Entities -->
+		<public publicId="-//W3C//ENTITIES Box and Line Drawing//EN//XML" uri="dtd/isobox.ent"/>
+		<public publicId="-//W3C//ENTITIES Russian Cyrillic//EN//XML" uri="dtd/isocyr1.ent"/>
+		<public publicId="-//W3C//ENTITIES Non-Russian Cyrillic//EN//XML" uri="dtd/isocyr2.ent"/>
+		<public publicId="-//W3C//ENTITIES Diacritical Marks//EN//XML" uri="dtd/isodia.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Latin 1//EN//XML" uri="dtd/isolat1.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Latin 2//EN//XML" uri="dtd/isolat2.ent"/>
+		<public publicId="-//W3C//ENTITIES Numeric and Special Graphic//EN//XML" uri="dtd/isonum.ent"/>
+		<public publicId="-//W3C//ENTITIES Publishing//EN//XML" uri="dtd/isopub.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Math Symbols: Arrow Relations//EN//XML" uri="dtd/isoamsa.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Math Symbols: Binary Operators//EN//XML" uri="dtd/isoamsb.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Math Symbols: Delimiters//EN//XML" uri="dtd/isoamsc.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Math Symbols: Negated Relations//EN//XML" uri="dtd/isoamsn.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Math Symbols: Ordinary//EN//XML" uri="dtd/isoamso.ent"/>
+		<public publicId="-//W3C//ENTITIES Added Math Symbols: Relations//EN//XML" uri="dtd/isoamsr.ent"/>
+		<public publicId="-//W3C//ENTITIES Greek Symbols//EN//XML" uri="dtd/isogrk3.ent"/>
+		<public publicId="-//W3C//ENTITIES Math Alphabets: Fraktur//EN//XML" uri="dtd/isomfrk.ent"/>
+		<public publicId="-//W3C//ENTITIES Math Alphabets: Open Face//EN//XML" uri="dtd/isomopf.ent"/>
+		<public publicId="-//W3C//ENTITIES Math Alphabets: Script//EN//XML" uri="dtd/isomscr.ent"/>
+		<public publicId="-//W3C//ENTITIES General Technical//EN//XML" uri="dtd/isotech.ent"/>
+		<public publicId="-//W3C//ENTITIES Additional MathML Symbols//EN//XML" uri="dtd/mmlextra.ent"/>
+		<public publicId="-//W3C//ENTITIES MathML Aliases//EN" uri="dtd/mmlalias.ent"/>
+	</group>
+
+</catalog>

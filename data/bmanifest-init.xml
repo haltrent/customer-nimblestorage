@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="bmanifest-init" default="" basedir=".">
+	<!--
+	*********************************************************************************
+	* Define global taskdef
+	*********************************************************************************
+	-->
+
+	<!-- Define all ant task contrib. http://ant-contrib.sourceforge.net/ -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
+	<!-- Support for the XmlTask ant library. http://www.oopsconsultancy.com/software/xmltask/#tutorials -->
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+
+	<!-- Support for the xpath ant library. https://code.google.com/p/ant-xpath-task/ -->
+	<taskdef name="xpath" classname="uk.co.cocking.anttasks.XPathTask"/>
+
+	<!--
+	*********************************************************************************
+	* Define global property to use across conductors
+	* All properties defined outside of any targets will be executed when the
+	* ant files are loaded; cannot contain properties defined by the running
+	* job (ie.e:${outgen.job.*}) into its value except ${outgen.job.ot.log.dir}
+	*********************************************************************************
+	-->
+
+	<!-- Enable to retrieve all environment variable from the OS -->
+	<property environment="env"/>
+	<osfamily property="outgen.os.family"/>
+
+	<property name="outgen.temp.dir" location="../temp"/>
+	<property name="outgen.data.dir" location="../data"/>
+	<property name="outgen.resources.dir" location="${outgen.data.dir}/resources"/>
+	<property name="outgen.resources.dir.client" location="${outgen.resources.dir}/client"/>
+
+	<!--
+	*********************************************************************************
+	* Import all other targets to be available to conductor file
+	*********************************************************************************
+	-->
+	<!-- Import common targets -->
+	<import file="commontargets.xml"/>
+
+	<!-- Import common targets of build manifest-->
+	<import file="commontargets-bmanifest.xml"/>
+
+	<!-- Import build manifest init of the client-->
+	<import file="bmanifest-init-client.xml" optional="true"/>
+
+	<!-- Import build manifest extension of the client-->
+	<import file="bmanifest-extension-client.xml" optional="true"/>
+
+	<!-- Import outgen init of the client-->
+	<import file="bmanifest-init-debug.xml" optional="true"/>
+
+	<!--
+	*********************************************************************************
+	* Create the outgen_job_init target that needs to be executed at the beginning of the "default_dependencies" target
+	* Don't change the content of this target. If you need to add something to initiate a job, 
+	* change the target "outgen_job_init-client" in outgen-init-client.xml
+	*********************************************************************************
+	-->
+	<!-- See documentation for more info https://ant.apache.org/manual/targets.html#extension-points -->
+	<extension-point name="bmanifest_job_init" depends="bmanifest_job_init_ixiasoft"/>
+
+	<target name="bmanifest_job_init_ixiasoft">
+		<echostart>bmanifest_job_init_ixiasoft</echostart>
+
+		<!-- Common properties created by this target -->
+		<property name="bmanifest.global.dir" location="${outgen.temp.dir}/${outgen.job.foldername}"/>
+
+		<!-- bmanifest.global.ditaval.relative is relative to the location of the bmanifest.file file. -->
+		<!-- if bmanifest.global.ditaval.relative is empty, make bmanifest.global.ditaval.fullpath empty also, 
+			 otherwise calculate the full path to the file. -->
+		<if>
+			<equals arg1="${bmanifest.global.ditaval.relative}" arg2="" trim="true"/>
+			<then>
+				<property name="bmanifest.global.ditaval.fullpath" value=""/>
+			</then>
+			<else>
+				<property name="bmanifest.global.ditaval.fullpath" location="${bmanifest.global.dir}/content/bmanifests/${bmanifest.global.ditaval.relative}"/>
+			</else>
+		</if>
+		<!-- bmanifest.file.relative starts with a "/" and is based on bmanifest.global.dir=outgen.job.dir -->
+		<property name="bmanifest.file.fullpath" location="${bmanifest.global.dir}${bmanifest.file.relative}" />
+		<!-- This is the source of the data that will be copied in each subfolder job -->
+		<property name="bmanifest.source.fullpath" location="${bmanifest.global.dir}/content" />
+
+		<!-- Filter the outputtype list based on ${outgen.preprocessor.onlyoutputtypelist}-->
+		<!-- Need to replace spaces by |(pipe) and set the property bmanifest.filtering -->
+		<if>
+			<isset property="outgen.preprocessor.onlyoutputtypelist"/>
+			<then>
+				<loadproperties>
+					<string value="${outgen.preprocessor.onlyoutputtypelist}"/>
+					<filterchain>
+						<tokenfilter>
+							<trim/>
+							<!-- replace one or more space by a |(pipe) -->
+							<replaceregex pattern="\s+" replace="\|" flags="g"/>
+						</tokenfilter>
+						<prefixlines prefix="bmanifest.filtering="/>
+					</filterchain>
+				</loadproperties>
+			</then>
+		</if>
+
+		<echoend>bmanifest_job_init_ixiasoft</echoend>
+	</target>
+
+	<!--
+	*********************************************************************************
+	* Create the outgen_job_init-post target that needs to be executed after the
+	* outgen_job_init-client at the beginning of "default_dependencies" target
+	*********************************************************************************
+	-->
+	<target name="bmanifest_job_init_post">
+		<echostart>bmanifest_job_init_post</echostart>
+
+		<setvalueifnotset property="bmanifest.job.keep.temp" value="no"/>
+		<setvalueifnotset property="bmanifest.job.keep.content" value="no"/>
+
+		<echoend>bmanifest_job_init_post</echoend>
+	</target>
+
+	<!--
+	*********************************************************************************
+	* Create the default_dependencies target that needs to be executed at the beginning of
+	* each target called by the preprocessor
+	* Don't change the content of this target. To add
+	* something, change the target "outgen_job_init-client" in outgen-init-client.xml
+	*********************************************************************************
+	-->
+	<extension-point name="bmanifest_default_dependencies" depends="bmanifest_default_dependencies_ixiasoft"/>
+
+	<target name="bmanifest_default_dependencies_ixiasoft" depends="bmanifest_loadproperties, bmanifest_job_init, bmanifest_job_init_post">
+		<echostart>bmanifest_default_dependencies_ixiasoft</echostart>
+
+		<antcall target="bmanifest_echo_properties">
+			<param name="label" value="init_end"/>
+		</antcall>
+
+		<echoend>bmanifest_default_dependencies_ixiasoft</echoend>
+	</target>
+</project>

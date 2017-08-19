@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+<!-- Make sure only one of the following catalog is uncommented -->
+<!--<nextCatalog catalog="../DITA-OT1.8.5/catalog-dita.xml"/>-->
+<nextCatalog catalog="../dita-ot-2.3.1/catalog-dita.xml"/>
+
+</catalog>

@@ -1,0 +1,111 @@
+<!-- ============================================================= -->
+<!--                    HEADER                                     -->
+<!-- ============================================================= -->
+<!--  MODULE:    IXIASOFT DITA CMS Build Manifest DTD              -->
+<!--  VERSION:   1.0                                               -->
+<!--  DATE:      November 2014                                     -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    PUBLIC DOCUMENT TYPE DEFINITION            -->
+<!--                    TYPICAL INVOCATION                         -->
+<!--                                                               -->
+<!--  Refer to this file by the following public identfier or an 
+      appropriate system identifier 
+PUBLIC "-//IXIA//DTD DITA CMS Build Manifest//EN"
+      Delivered as file "build-manifest.dtd"                       -->
+
+<!-- ============================================================= -->
+<!-- SYSTEM:     Darwin Information Typing Architecture (DITA)     -->
+<!--                                                               -->
+<!-- PURPOSE:    Base DTD holding build manifest definition        -->
+<!--             used by IXIASOFT DITA CMS                         -->
+<!--                                                               -->
+<!-- ORIGINAL CREATION DATE:                                       -->
+<!--             September 2014                                    -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    MAP ENTITY DECLARATIONS                    -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ENTITY DECLARATIONS                 -->
+<!-- ============================================================= -->
+
+<!ENTITY % mapgroup-d-dec 
+  PUBLIC "-//OASIS//ENTITIES DITA 1.2 Map Group Domain//EN" 
+         "../../../dtd/base/dtd/mapGroup.ent"
+>%mapgroup-d-dec;
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE DECLARATIONS              -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    DOMAIN EXTENSIONS                          -->
+<!-- ============================================================= -->
+<!--                    One for each extended base element, with
+                        the name of the domain(s) in which the
+                        extension was declared                     -->
+
+<!ENTITY % topicref     "topicref |
+                         %mapgroup-d-topicref;
+                        ">
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE EXTENSIONS                -->
+<!-- ============================================================= -->
+
+<!ENTITY % props-attribute-extensions  ""                            >
+<!ENTITY % base-attribute-extensions   ""                            >
+
+<!-- ============================================================= -->
+<!--                    DOMAINS ATTRIBUTE OVERRIDE                 -->
+<!-- ============================================================= -->
+<!--                    Must be declared ahead of the DTDs, which
+                        puts @domains first in order               -->
+
+<!ENTITY included-domains 
+                        "&mapgroup-d-att;
+                        ">
+
+<!-- ============================================================= -->
+<!--                    CONTENT CONSTRAINT INTEGRATION             -->
+<!-- ============================================================= -->
+
+<!--                    Constraint on mapref content is defined    -->
+<!--                    inline for simplicity                      -->
+
+<!ENTITY % topicmeta   "topicmeta"                                   >
+<!ENTITY % keydef.content
+                       "(%topicmeta;)?"                              >
+<!ENTITY % mapref.content
+                       "(%topicmeta;)?"                              >
+
+<!-- ============================================================= -->
+<!--                    MAP ELEMENT INTEGRATION                    -->
+<!-- ============================================================= -->
+
+<!ENTITY % map-type 
+  PUBLIC "-//OASIS//ELEMENTS DITA 1.2 Map//EN" 
+         "../../../dtd/base/dtd/map.mod"
+>%map-type;
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ELEMENT INTEGRATION                 -->
+<!-- ============================================================= -->
+
+<!ENTITY % mapgroup-d-def 
+  PUBLIC "-//OASIS//ELEMENTS DITA 1.2 Map Group Domain//EN" 
+         "../../../dtd/base/dtd/mapGroup.mod"
+>%mapgroup-d-def;
+
+<!ENTITY % bmanifest-typemod 
+  PUBLIC "-//IXIA//ELEMENTS DITA CMS Build Manifest//EN" 
+"build-manifest.mod"
+>%bmanifest-typemod;
+
+<!-- ================== End DITA CMS Build Manifest DTD ========== -->

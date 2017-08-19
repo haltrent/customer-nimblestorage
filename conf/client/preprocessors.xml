@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To extend the list of available preprocessors, add your new preprocessors to
+     this file. If a preprocessor with the same name exists in this file and in the 
+	 conf/preprocessors.xml file, the preprocessor defined below overrides the preprocessor
+	 in conf. -->
+<preprocessors>
+
+	<!-- ================================================= -->
+	<!-- Example of the different types of user parameters -->
+	<!--                                                   -->
+	<!-- For the "index-list" and "index-choice" types,    -->
+	<!-- the @name attribute must match a string index     -->
+	<!-- from the index definition                         -->
+	<!--                                                   -->
+	<!-- @label and @tooltip are optional attributes       -->
+	<!-- for all types of parameter                        -->
+	<!--                                                   -->
+	<!-- @format is optional for all types except "date"   -->
+	<!-- see http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html -->
+
+	<!--
+	<user>
+		<parameter label="Sample text field" name="text.field" mandatory="false" type="string"/>
+		<parameter label="Sample text field with validation" name="text.field2" mandatory="false" type="string" format="[0-9]*[.][0-9]*[.][0-9]{3}" tooltip="2.3.009"/>
+		<parameter label="Sample date" name="date" mandatory="false" type="date" format="yyyy-MM-dd" tooltip="Format is yyyy-mm-dd"/>
+		<parameter label="Sample list" name="list" mandatory="false" type="list">
+			<value name="item1">Item 1</value>
+			<value name="item2">Item 2</value>
+		</parameter>
+		<parameter label="Sample choice" name="choice" mandatory="false" type="choice">
+			<value name="value1" _default="true">Value 1</value>
+			<value name="value2">Value 2</value>
+		</parameter>
+		<parameter label="Sample index-list (using audience)" name="audience" mandatory="false" type="index-list"/>
+		<parameter label="Sample index-choice (using platform)" name="platform" mandatory="false" type="index-choice"/>
+	</user>
+	-->
+
+	<!-- ================================================= -->
+
+	<preprocessor name="dita2webhelp-responsive"
+		class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-client.xml"/>
+				<parameter name="target" value="client.dita2webhelp-responsive"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+			<user>
+				<parameter label="Template Style" name="preprocessor.webhelp.responsive.skin.name"
+					mandatory="true" type="choice">
+					<value name="oxygen" _default="yes">Oxygen</value>
+					<value name="light">Light</value>
+					<value name="orange">Orange</value>
+				</parameter>
+				<!--<parameter label="Sample index-list (using audience)" name="audience"
+					mandatory="false" type="index-list"/>
+				<parameter label="Sample index-choice (using platform)" name="platform"
+					mandatory="false" type="index-choice"/>-->
+			</user>
+		</parameters>
+	</preprocessor>
+
+	<preprocessor name="dita2nimble-pdf-standard"
+		class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-client.xml"/>
+				<parameter name="target" value="client.dita2nimble-pdf-standard"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+			<user>
+				<parameter label="DRAFT" name="preprocessor.args.draft" mandatory="true" type="choice">
+					<value name="no" _default="yes">No</value>
+					<value name="yes">Yes</value>
+				</parameter>
+				<parameter label="FRONTCOVER" name="preprocessor.client.args.front.cover" mandatory="true"
+					type="choice">
+					<value name="post-casablanca" _default="yes">Nimble</value>
+					<value name="pre-casablanca">Legacy (pre-daytona)</value>
+				</parameter>
+				<parameter label="FEEDBACK" name="preprocessor.client.args.feedback" mandatory="true"
+					type="choice">
+					<value name="techpubs" _default="yes">Tech Pubs</value>
+					<value name="support_feedback">Support</value>
+					<value name="techmktg">Tech Marketing</value>
+					<value name="no">No</value>
+				</parameter>
+				<!--<parameter label="Sample index-list (using audience)" name="audience"
+					mandatory="false" type="index-list"/>
+				<parameter label="Sample index-choice (using platform)" name="platform"
+					mandatory="false" type="index-choice"/>-->
+			</user>
+		</parameters>
+	</preprocessor>
+
+
+	<preprocessor name="dita2nimble-pdf-hardcopy"
+		class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
+		<parameters>
+			<system>
+				<parameter name="buildfile" value="/conductor-client.xml"/>
+				<parameter name="target" value="client.dita2nimble-pdf-hardcopy"/>
+				<parameter name="clean" value="job_postprocess"/>
+				<parameter name="keep.log.files" value="true"/>
+			</system>
+			<user>
+				<parameter label="DRAFT" name="preprocessor.args.draft" mandatory="true" type="choice">
+					<value name="no" _default="yes">No</value>
+					<value name="yes">Yes</value>
+				</parameter>
+				<parameter label="DIMENSION" name="preprocessor.client.args.dimension" mandatory="true"
+					type="choice">
+					<value name="standard" _default="yes">Standard</value>
+					<value name="test_16x20_standard">16x20</value>
+				</parameter>
+				<parameter label="LAYOUT" name="preprocessor.client.args.layout" mandatory="true" type="choice">
+					<value name="portrait" _default="yes">Portrait</value>
+					<value name="landscape-2col">Landscape 2 Columns</value>
+					<value name="landscape-3col">Landscape 3 Columns</value>
+					<value name="landscape-4col">Landscape 4 Columns</value>
+				</parameter>
+				<!--<parameter label="Sample index-list (using audience)" name="audience"
+					mandatory="false" type="index-list"/>
+				<parameter label="Sample index-choice (using platform)" name="platform"
+					mandatory="false" type="index-choice"/>-->
+			</user>
+		</parameters>
+	</preprocessor>
+
+
+</preprocessors>

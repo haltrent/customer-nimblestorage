@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="commontargets-client" default="" basedir=".">
+
+	<!--
+	*********************************************************************************
+	* Define your targets and macrodefs here; they can be used in conductor files.
+	* If the file becomes too big, follow a logical way to split it.
+	*********************************************************************************
+	-->
+	<!-- Import common targets macros client -->
+	<import file="commontargets-macros-client.xml" optional="true"/>
+
+	<target name="client.foobarExample">
+		<echostart>foobarExample</echostart>
+
+		<!-- Put your task here -->
+
+		<echoend>foobarExample</echoend>
+	</target>
+
+</project>

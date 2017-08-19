@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<outputgenerator>
+	<textml address="IP_ADDRESS_IS_NOT_USED_LEAVE_EMPTY" port="2500" forceupdate="false" version="4" secure="false">
+		<docbase>DOCBASE_NAME_IS_NOT_USED_LEAVE_EMPTY</docbase>
+		<user domain="nimblestorage.com" name="htrent" password="Nimboli4321!"/>
+		<timeout>500000</timeout>
+	</textml>
+</outputgenerator>

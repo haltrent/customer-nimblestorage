@@ -1,0 +1,8 @@
+# Property file for the ANT scripting
+# Any property defined in this file will have priority over any other
+# property defined in any ANT script file, except for the one defined in the
+# wrapper.conf in the section "Java Additional Parameters".
+
+outgen.ot.version=2.3.1
+#The outgen.ot.release.family property is now optional
+#outgen.ot.release.family=2.x

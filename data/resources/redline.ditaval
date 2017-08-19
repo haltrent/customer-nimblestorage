@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This sets the background for deleted text to red and for added text to blue. Used by redline PDF transform -->
+<val>
+  <!-- the changebar attribute supports the following fields : 
+    style:[none | hidden | dotted | dashed | solid | double | groove | ridge | inset | outset]
+    width:Xpt
+    placement:[start | end | left | right | inside | outside | alternate]
+    offset:Xpt
+    color: #FFFFFF - color code -->
+  <revprop action="flag" val="deltaxml-add" backcolor="#3399CC" changebar="style:solid;width:1pt;offset:5pt;color:#3399CC"/>
+  <revprop action="flag" val="deltaxml-delete" backcolor="#CC0000" changebar="style:solid;width:1pt;offset:5pt;color:#CC0000"/>
+</val>

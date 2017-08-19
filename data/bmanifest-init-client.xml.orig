@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="bmanifest-extention-client" default="" basedir=".">
+
+	<!--
+	*********************************************************************************
+	* Import all other targets that will be available to conductor files
+	*********************************************************************************
+	-->
+
+	<!-- Import common targets of the client-->
+	<import file="commontargets-client.xml" optional="true"/>
+	
+	<!--
+	*********************************************************************************
+	* Client properties created at the beginning of each job. This target will be executed
+	* immediately after the target outgen_job_init_ixiasoft
+	*********************************************************************************
+	-->
+	<target name="bmanifest_job_init_client" extensionOf="bmanifest_job_init">
+		<echostart>bmanifest_job_init_client-client</echostart>
+
+		<!--
+		<property name="bmanifest.global.client.propname1" value="foobar1"/>
+		-->
+
+		<echoend>bmanifest_job_init_client-client</echoend>
+	</target>
+
+
+	<!--
+	*********************************************************************************
+	* Add a list of dependencies to the target "default_dependencies"
+	*********************************************************************************
+	-->
+	<target name="default_dependencies_client" extensionOf="bmanifest_default_dependencies" depends="">
+		<echostart>default_dependencies_client</echostart>
+
+		<!--
+		<property name="outgen.job.client.propname2" value="foobar2"/>
+		-->
+
+		<antcall target="bmanifest_echo_properties">
+			<param name="label" value="init_client_end"/>
+		</antcall>
+
+		<echoend>default_dependencies_client</echoend>
+	</target>
+
+</project>

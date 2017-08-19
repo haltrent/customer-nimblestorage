@@ -1,0 +1,8 @@
+<!-- empty branding file. -->
+<branding>
+	<!-- type is the key used in the Branding task to retrieve list of documents to retrieve -->
+	<brand type="">
+		<!-- Textml absolute path to document -->
+		<path></path>
+	</brand>
+</branding>

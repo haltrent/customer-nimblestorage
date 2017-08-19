@@ -1,0 +1,11 @@
+[libdefaults]
+	default_realm = EXAMPLE.LOCAL
+	default_keytab_name = FILE:c:\windows\krb5.keytab
+[realms]
+	EXAMPLE.LOCAL = {
+		kdc = dc1.EXAMPLE.local:88
+		kdc = dc2.EXAMPLE.local:88
+		default_domain = example.local        
+	}
+[domain_realm]
+	.example.local = EXAMPLE.LOCAL

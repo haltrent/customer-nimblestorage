@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project name="com.nimble.pdf-standard">
+    <target name="dita2nimble-pdf-standard.init">
+        <property name="customization.dir" location="${dita.plugin.com.nimble.pdf-standard.dir}${file.separator}cfg"/>
+        <property name="xep.dir" location="${dita.plugin.com.nimble.pdf-standard.dir}${file.separator}xep"/>
+
+        <condition property="args.chapter.layout" value="BASIC">
+            <not><isset property="args.chapter.layout"/></not>
+        </condition>
+    </target>
+
+    <target name="dita2nimble-pdf-standard"
+            depends="dita2nimble-pdf-standard.init,
+                    dita2pdf2"/>
+</project>

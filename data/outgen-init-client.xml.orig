@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="outgen-init-client" default="" basedir=".">
+
+	<!--
+	*********************************************************************************
+	* Define any global taskdef here
+	*********************************************************************************
+	-->
+
+
+	<!--
+	*********************************************************************************
+	* Define global properties to use across all conductor files
+	* All properties defined outside of a target will be executed when the
+	* ant files are loaded; they cannot contain properties defined by the running
+	* job (ie.e:${outgen.job.*}) into its value except for ${outgen.job.ot.log.dir}
+	*********************************************************************************
+	-->
+
+
+	<!--
+	*********************************************************************************
+	* Import all other targets that will be available to conductor files
+	*********************************************************************************
+	-->
+
+	<!-- Import common targets of the client-->
+	<import file="commontargets-client.xml" optional="true"/>
+
+
+	<!--
+	*********************************************************************************
+	* Define the default PDF rendering engine to use
+	* Please note: The system output types for redlining and reviewpdf
+	* are not supported with FOP
+	*
+	* Value -> Rendering Engine
+	* =========================
+	* fop      Apache FOP
+	* ah       Antenna House Formatter
+	* xep      RenderX XEP
+	*********************************************************************************
+	-->
+	<!--<property name="outgen.job.default.pdf.formatter" value=""/>-->
+
+
+	<!--
+	*********************************************************************************
+	* Config for ANT
+	*********************************************************************************
+	-->
+	<!-- These values are passed as is to the OS when executing "startcmd", so you need to
+		  use the property ${file.separator} or ${path.separator} between components -->
+
+	<!--<property name="outgen.job.ant.java.memory" value="512m"/>-->
+	<!--<property name="outgen.job.ant.java.home" location="${java.home}"/>-->
+	<!--<property name="outgen.job.ant.opts" value="-Xmx${outgen.job.ant.java.memory} -Djavax.xml.transform.TransformerFactory=net.sf.saxon.TransformerFactoryImpl"/>-->
+
+	<!-- Use this line for Windows -->
+	<!--<property name="outgen.job.ant.path" value="${outgen.ot.dir}${file.separator}tools${file.separator}ant${file.separator}bin${path.separator}${env.Path}"/>-->
+	<!-- Use this line for Linux -->
+	<!--<property name="outgen.job.ant.path" value="${outgen.ot.dir}${file.separator}tools${file.separator}ant${file.separator}bin${path.separator}${env.PATH}"/>-->
+
+	<!--
+	*********************************************************************************
+	* Config for ANT for OT Release family 1.x
+	*********************************************************************************
+	-->	
+	<!--<property name="outgen.job.ant.home" value="${outgen.ot.dir}${file.separator}tools${file.separator}ant"/>-->
+	
+	<!--
+	*********************************************************************************
+	* Config for ANT for OT Release family 2.x
+	*********************************************************************************
+	-->
+	<!--<property name="outgen.job.ant.java.cmd" value=""/>-->
+	<!--<property name="outgen.job.ant.args" value=""/>-->
+	
+	<!--
+	*********************************************************************************
+	* Classpath for OT Release family 1.x
+	*********************************************************************************
+	-->
+	<!-- You can define the classpath globally here or you can define one for a specific
+		 target. If you define a classpath globally, you cannot define one in a target.
+		 The "before.id" will put the classpath before the standard ANT classpath and 
+		 allow you to supersede any class with yours.
+		 The "after.id" will add your classpath at the end of the standard ANT
+		 classpath. 
+		 See the Ant documentation for more information https://ant.apache.org/manual/using.html#path --> 
+	
+	<!--<path id="outgen.job.ant.classpath.client.before.id">
+	</path>-->
+	<!--<path id="outgen.job.ant.classpath.client.after.id">
+	</path>-->
+
+	<!--
+	*********************************************************************************
+	* Classpath for OT Release family 2.x
+	*********************************************************************************
+	-->
+	<!-- You can define the classpath globally here or you can define one for a specific
+		 target. If you define a classpath globally, you cannot define one in a target.
+		 See the Ant documentation for more information https://ant.apache.org/manual/using.html#path --> 
+	
+	<!--<path id="outgen.job.ant.classpath.client.2x">
+	</path>-->
+	
+	<!--
+	*********************************************************************************
+	* Config for ah
+	*********************************************************************************
+	-->
+	<!--<property name="env.AXF_DIR" location="/usr/AHFormatterV62_64"/>-->
+	<!--<property name="env.AXF_DIR" location="C:\Program Files\Antenna House\AHFormatterV62"/>-->
+	<!-- If you need a custom setting file for different output types,
+	     do not set the value here; set it instead in each target that calls the renderer. -->
+	<!--<property name="env.AXF_OPT" location="${outgen.resources.dir.client}${file.separator}AHFSettings.xml"/>-->
+
+	<!-- If you are using the plugin com.antennahouse.pdf5, you must define the 
+		 AHF_DIR and AHF_OPT properties instead. -->
+	<!--<property name="env.AHF_DIR" location="C:\Program Files\Antenna House\AHFormatterV6"/>-->
+	<!--<property name="env.AHF_OPT" location="${outgen.resources.dir.client}${file.separator}AHFSettings.xml"/>-->
+
+
+	<!--
+	*********************************************************************************
+	* Config for xep
+	*********************************************************************************
+	-->
+	<!--<property name="outgen.job.xep.dir" location="/usr/local/RenderX/XEP"/>-->
+	<!--<property name="outgen.job.xep.dir" location="C:\Program Files\RenderX\XEP"/>-->
+	<!-- If you need a custom setting file for different output types,
+	     do not set the value here; set it instead in each target that calls the renderer. -->
+	<!--<property name="outgen.job.custom.xep.config" location="${outgen.resources.dir.client}/xep.xml"/>-->
+	<!--<property name="outgen.job.custom.xep.memory" value="1024m"/>-->
+
+
+	<!--
+	*********************************************************************************
+	* Config for HTML Help workshop
+	*********************************************************************************
+	-->
+	<!--<property name="outgen.job.hhc.dir" location="C:\Program Files (x86)\HTML Help Workshop"/>-->
+
+
+	<!--
+	*********************************************************************************
+	* Client properties created at the beginning of each job. This target will be executed
+	* immediately after the target outgen_job_init_ixiasoft
+	*********************************************************************************
+	-->
+	<target name="outgen_job_init_client" extensionOf="outgen_job_init">
+		<echostart>outgen_job_init-client</echostart>
+
+		<!--
+		<property name="outgen.job.client.propname1" value="foobar1"/>
+		-->
+
+		<echoend>outgen_job_init-client</echoend>
+	</target>
+
+
+	<!--
+	*********************************************************************************
+	* Add a list of dependencies to the target "default_dependencies"
+	* ?????? need to to test this
+	*********************************************************************************
+	-->
+	<target name="default_dependencies_client" extensionOf="default_dependencies" depends="">
+		<echostart>default_dependencies_client</echostart>
+
+		<!--
+		<property name="outgen.job.client.propname2" value="foobar2"/>
+		-->
+
+		<antcall target="echo_outgen_properties"/>
+
+		<echoend>default_dependencies_client</echoend>
+	</target>
+
+</project>

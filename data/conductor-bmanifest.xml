@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="conductor-bmanifest" default="" basedir=".">
+
+	<import file="bmanifest-init.xml"/>
+
+	<!-- By creating an empty target and defining a list of dependencies, this file allows the client to 
+		 create properties that will be visible to the bmanifest_notify. This is because an
+		 antcall will create properties in the children process without being visible by the 
+		 calling target -->
+	<target name="BuildManifest" depends="bmanifest_ixiasoft, bmanifest_postprocess, bmanifest_notify"/>
+	
+	<extension-point name="bmanifest_postprocess" depends=""/>
+
+	<target name="bmanifest_ixiasoft" depends="bmanifest_default_dependencies">
+		<echostart>bmanifest_ixiasoft</echostart>
+		<for list="${bmanifest.ouputtypes.list}" delimiter="," param = "id">
+			<sequential>
+				<echolog>*** START of output type id=@{id} type=${bmanifest.@{id}.outputtype} ***</echolog>
+				<local name="local.ditaval.relative"/>
+				<local name="local.ditaval.fullpath"/>
+				<local name="local.userparams"/>
+				<local name="local.languages.list"/>
+				<local name="local.execute.output"/>
+
+				<!-- If the output type doesn't exist in this outgen, the build will fail.
+					 The main reason is that there is no easy way to return an error to the user without the need to
+					 read a log file. -->
+
+				<fail message="One of the output types defined in this Build Manifest doesn't 
+							   exist in this output generator${line.separator}
+							   Output: @{id}${line.separator}
+							   Build Manifest: ${bmanifest.title} (${outgen.job.source.name.noext})">
+					<condition>
+						<or>
+							<!-- If the property is not present in the property file it will be equal to it own name -->
+							<!-- $$ escapes the $ sign (NOT A BUG) -->
+							<equals arg1="${bmanifest.@{id}.outputtype}" arg2="$${bmanifest.@{id}.outputtype}"/>
+							<equals arg1="${bmanifest.@{id}.outputtype}" arg2="" trim="yes" />
+						</or>
+					</condition>
+				</fail>
+
+				<!-- Use the global ditaval value (even if empty) if the current output doesn't have a ditaval value defined.
+				     Both ditaval values are a relative path to the bmanifest folder. Get an absolute path -->
+				<setdefaultvalueifblank property="local.ditaval.relative" ifblank="${bmanifest.@{id}.ditaval}" default="${bmanifest.global.ditaval.relative}"/>
+				<if>
+					<available type="file" file="${bmanifest.global.dir}/content/bmanifests/${local.ditaval.relative}"/>
+					<then>
+						<property name="local.ditaval.fullpath" location="${bmanifest.global.dir}/content/bmanifests/${local.ditaval.relative}"/>
+					</then>
+					<else>
+						<property name="local.ditaval.fullpath" value=""/>
+					</else>
+				</if>
+				<!-- Use the global value if the current output doesn't have userparam or language list -->
+				<setdefaultvalueifblank property="local.userparams" ifblank="${bmanifest.@{id}.properties}" default="${bmanifest.global.userparams}"/>
+				<setdefaultvalueifblank property="local.languages.list" ifblank="${bmanifest.@{id}.languages}" default="${bmanifest.global.languages.list}"/>
+				<setdefaultvalueifblank property="local.localizedmap" ifblank="" default="${bmanifest.localizedmap}"/>
+
+				<!-- It is possible to filter out all output types except one.
+					 This is controlled by the preprocessor file; you need to add a system param 
+					 xpath:/preprocessors/preprocessor[@name="BuildManifest"]/parameters/system
+					 <parameter name="onlyoutputtypelist" value="dita2pdf export" /> -->
+				<if>
+					<isset property="bmanifest.filtering"/>
+					<then>
+						<if>
+							<matches string="${bmanifest.@{id}.outputtype}" pattern="${bmanifest.filtering}" casesensitive="true"/>
+							<then>
+								<property name="local.execute.output" value="true"/>
+							</then>
+							<else>
+								<echocaution>NOT Processing ${bmanifest.@{id}.outputtype} because it doesn't match one of this "${outgen.preprocessor.onlyoutputtypelist}" type</echocaution>
+								<property name="local.execute.output" value="false"/>
+							</else>
+						</if>
+					</then>
+					<else>
+						<property name="local.execute.output" value="true"/>
+					</else>
+				</if>
+				<if>
+					<istrue value="${local.execute.output}"/>
+					<then>
+						<!-- Call each output type from the list and pass unique value to it -->
+						<antcall target="bmanifest_process_outputtype">
+							<param name="bmanifest.output.buildfile" value="${bmanifest.@{id}.buildfile}"/>
+							<param name="bmanifest.output.ditaval.filename" value="${local.ditaval.fullpath}"/>
+							<param name="bmanifest.output.languages.list" value="${local.languages.list}"/>
+							<param name="bmanifest.output.localizedmap" value="${local.localizedmap}"/>
+							<param name="bmanifest.output.outputtype" value="${bmanifest.@{id}.outputtype}"/>
+							<param name="bmanifest.output.userparams" value="${local.userparams}"/>
+							<param name="bmanifest.output.systemparams" value="${bmanifest.@{id}.systemparams}"/>
+							<param name="bmanifest.output.target" value="${bmanifest.@{id}.target}"/>
+							<param name="bmanifest.output.id" value="@{id}"/>
+						</antcall>
+					</then>
+				</if>
+				<echolog>*** END of output type id=@{id} type=${bmanifest.@{id}.outputtype} ***</echolog>
+			</sequential>
+		</for>
+
+		<echoend>bmanifest_ixiasoft</echoend>
+	</target>
+
+	<target name="bmanifest_process_outputtype" depends="bmanifest_preprocessor_systemparams, bmanifest_preprocessor_userparams">
+		<echostart>bmanifest_process_outputtype</echostart>
+		<!-- Use global language list if the current output doesn't have a list -->
+		<if>
+			<not>
+				<equals arg1="${bmanifest.output.languages.list}" arg2="" trim="true"/>
+			</not>
+			<then>
+				<!-- Loop through each language -->
+				<for list="${bmanifest.output.languages.list}" delimiter="," param="lang">
+					<sequential>
+						<local name="local.uniquename"/>
+						<!-- Generate a unique folder name for each job -->
+						<property name="local.uniquename" value="${bmanifest.output.outputtype}_@{lang}_${bmanifest.output.id}"/>
+						<echolog>****** START specific job with unique name of ${local.uniquename} ******</echolog>
+						<antcall target="bmanifest_outgen_target">
+							<!-- By default no reference ids are passed to the children processes -->
+							<reference refid="bmanifest.output.userparams.id"/>
+							<reference refid="bmanifest.output.systemparams.id"/>
+							<param name="bmanifest.output.uniquename" value="${local.uniquename}"/>
+							<param name="bmanifest.output.languages.current" value="@{lang}"/>
+							<param name="bmanifest.output.localizedmap" value="@{local.localizedmap}"/>
+							<param name="bmanifest.output.collection" value="/content/localization/@{lang}/"/>
+						</antcall>
+						<echolog>****** END specific job with unique name of ${local.uniquename} ******</echolog>
+					</sequential>
+				</for>
+			</then>
+		</if>
+
+		<!-- Source language -->
+		<local name="local.uniquename"/>
+		<property name="local.uniquename" value="${bmanifest.output.outputtype}_lang_source_${bmanifest.output.id}"/>
+		<echolog>****** START specific job with unique name of ${local.uniquename} ******</echolog>
+		<antcall target="bmanifest_outgen_target">
+			<reference refid="bmanifest.output.userparams.id"/>
+			<reference refid="bmanifest.output.systemparams.id"/>
+			<!-- Generate a unique folder name for each job -->
+			<param name="bmanifest.output.uniquename" value="${local.uniquename}"/>
+			<param name="bmanifest.output.languages.current" value="source"/>
+			<param name="bmanifest.output.collection" value="/content/authoring/"/>
+			<!-- TODO bugzilla 2863 It will not work with a published map -->
+		</antcall>
+		<echolog>****** END specific job with unique name of ${local.uniquename} ******</echolog>
+		<echoend>bmanifest_process_outputtype</echoend>
+	</target>
+
+	<target name="bmanifest_setup_outgen_job" depends="bmanifest_init_setup_outgen_job">
+		<echostart>bmanifest_setup_outgen_job</echostart>
+
+		<!-- Create all properties that will be sent to the transform. They are all created with
+			 the prefix bmanifest.job. This prefix will be removed once the transform is called. -->
+
+		<!-- Properties that are unique to the current job -->
+		<property name="bmanifest.job.outgen.job.userparam.filename" value="${bmanifest.output.job.userparams.filename}"/>
+		<property name="bmanifest.job.outgen.job.source.collection" value="${bmanifest.output.collection}"/>
+		
+		<if>
+			<equals arg1="${bmanifest.output.collection}" arg2="/content/authoring/"/>
+			<then>
+				<property name="bmanifest.job.outgen.job.source.name" value="${bmanifest.map.name}" />
+			</then>
+			<else>
+				<property name="bmanifest.job.outgen.job.source.name" value="${bmanifest.localizedmap}" />	
+			</else>
+		</if>
+		
+		<property name="bmanifest.job.outgen.job.source.name.noext" value="${bmanifest.map.name.noext}" />
+		<property name="bmanifest.job.outgen.job.output.dir" value="${bmanifest.output.job.output.dir}" />
+		<property name="bmanifest.job.outgen.job.foldername" value="${outgen.job.foldername}/${bmanifest.output.uniquename}" />
+
+		<!-- Use the same value as the property of the current build manifest -->
+		<property name="bmanifest.job.outgen.job.build.log.filename" value="${outgen.job.build.log.filename}" />
+		<property name="bmanifest.job.outgen.job.requester.email" value="${outgen.job.requester.email}" />
+		<property name="bmanifest.job.outgen.job.requester.name" value="${outgen.job.requester.name}" />
+		<property name="bmanifest.job.outgen.job.textmlserver.name" value="${outgen.job.textmlserver.name}" />
+		<property name="bmanifest.job.outgen.job.docbase.name" value="${outgen.job.docbase.name}" />
+		<property name="bmanifest.job.outgen.job.lastmodifier.email" value="${outgen.job.lastmodifier.email}" />
+		<property name="bmanifest.job.outgen.job.lastmodifier.name" value="${outgen.job.lastmodifier.name}" />
+
+		<!-- Property to allow the current job to know it was run from a build manifest -->
+		<property name="bmanifest.job.outgen.job.frombuildmanifest" value="true"/>
+
+		<!-- Legacy 3.4 -->
+		<property name="bmanifest.job.build.log" value="${outgen.job.build.log.filename}" />
+		<property name="bmanifest.job.build.properties" value="${bmanifest.output.job.userparams.filename}" />
+		<property name="bmanifest.job.collection" value="${bmanifest.output.collection}" />
+		<property name="bmanifest.job.id" value="${bmanifest.map.name}" />
+		<property name="bmanifest.job.id.noextension" value="${bmanifest.map.name.noext}" />
+		<property name="bmanifest.job.outputdir" value="${bmanifest.output.job.output.dir}" />
+		<property name="bmanifest.job.path" value="${outgen.job.foldername}/${bmanifest.output.uniquename}" />
+		<property name="bmanifest.job.publisher.email" value="${outgen.job.requester.email}" />
+		<property name="bmanifest.job.publisher.name" value="${outgen.job.requester.name}" />
+		<property name="bmanifest.job.textml.address" value="${outgen.job.textmlserver.name}" />
+		<property name="bmanifest.job.textml.docbase" value="${outgen.job.doscbase.name}" />
+		<property name="bmanifest.job.writer.email" value="${outgen.job.lastmodifier.email}" />
+		<property name="bmanifest.job.writer.name" value="${outgen.job.lastmodifier.name}" />
+
+		<!-- Define an id for this list of property -->
+		<propertyset id="bmanifest.output.CommonProperties.id">
+			<propertyref prefix="bmanifest.job."/>
+		</propertyset>
+		<echoend>bmanifest_setup_outgen_job</echoend>
+	</target>
+
+	<target name="bmanifest_init_setup_outgen_job" >
+		<echostart>bmanifest_init_setup_outgen_job</echostart>
+
+		<!-- Create all necessary properties for the current job -->
+		<property name="bmanifest.output.job.dir" value="${bmanifest.global.dir}/${bmanifest.output.uniquename}"/>
+		<property name="bmanifest.output.job.output.dir" value="${outgen.job.output.dir}/${bmanifest.output.uniquename}"/>
+		<property name="bmanifest.output.job.userparams.filename" value="${bmanifest.output.job.dir}/${bmanifest.map.name.noext}.properties"/>
+
+		<!-- Copy content, create user param file, create folder structure -->
+		<antcall target="bmanifest_init_setup_outgen_job_files">
+			<reference refid="bmanifest.output.userparams.id"/>
+			<reference refid="bmanifest.output.systemparams.id"/>
+		</antcall>
+		<echoend>bmanifest_init_setup_outgen_job</echoend>
+	</target>
+
+	<target name="bmanifest_init_setup_outgen_job_files">
+		<echostart>bmanifest_init_setup_outgen_job_files</echostart>
+
+		<!-- Create the necessary folders before using them -->
+		<mkdir dir="${bmanifest.output.job.dir}"/>
+		<mkdir dir="${bmanifest.output.job.output.dir}"/>
+
+		<!-- Create the user properties file on disk -->
+		<echoproperties destfile="${bmanifest.output.job.userparams.filename}">
+			<propertyset>
+				<propertyset refid="bmanifest.output.userparams.id"/>
+				<mapper type="glob" from="bmanifest.output.userparams.*" to="*"/>
+			</propertyset>
+		</echoproperties>
+
+		<!-- For future requirements: It is possible to create the system param to disk-->
+
+		<!-- copy only content for the current output to the unique foldername
+			 Create file source.txt to specify where the content came from -->
+		<if>
+			<equals arg1="${bmanifest.output.languages.current}" arg2="source"/>
+			<then>
+				<echolog>Copy source content into job folder for source language</echolog>
+				<copy todir="${bmanifest.output.job.dir}/content/authoring">
+					<fileset dir="${bmanifest.global.dir}/content/authoring"/>
+					<!--TODO bugzilla 2863 need to support branch map in publish -->
+				</copy>
+				<echo level="error" file="${bmanifest.output.job.dir}/content/authoring/source.txt" append="true"
+				message='The content of "${bmanifest.global.dir}/content/authoring/" was copied${line.separator}
+				here:"${bmanifest.output.job.dir}/content/authoring/" just for the time of the transformation.${line.separator}
+				At the end of the transform this content is deleted to save space'/>
+			</then>
+			<else>
+				<echolog>Copy source content into job folder  for language ${bmanifest.output.languages.current}</echolog>
+				<copy todir="${bmanifest.output.job.dir}/content/localization/${bmanifest.output.languages.current}">
+					<fileset dir="${bmanifest.global.dir}/content/localization/${bmanifest.output.languages.current}"/>
+				</copy>
+				<copy todir="${bmanifest.output.job.dir}/content/authoring">
+					<fileset dir="${bmanifest.global.dir}/content/authoring"/>
+					<!--TODO bugzilla 2863 need to support branch map in publish -->
+				</copy>
+				<echo level="error" file="${bmanifest.output.job.dir}/content/localization/${bmanifest.output.languages.current}/source.txt" append="true"
+				message='The content of "${bmanifest.global.dir}/content/localization/${bmanifest.output.job.lang}/" was copied${line.separator}
+				 here: "${bmanifest.output.job.dir}/content/localization/${bmanifest.output.job.lang}/" just for the time of the transformation.${line.separator}
+				 The content of "${bmanifest.global.dir}/content/authoring/" was copied${line.separator}
+				 here:"${bmanifest.output.job.dir}/content/authoring/" just for the time of the transformation.${line.separator}
+				At the end of the transform this content is deleted to save space'/>
+			</else>
+		</if>
+		<echoend>bmanifest_init_setup_outgen_job_files</echoend>
+	</target>
+
+	<target name="bmanifest_outgen_target" depends="bmanifest_setup_outgen_job">
+		<echostart>bmanifest_outgen_target</echostart>
+
+		<antcall target="bmanifest_echo_properties">
+			<param name="label" value="job_${bmanifest.output.uniquename}"/>
+		</antcall>
+
+		<!-- Check if a ditaval is present. The native job (without the bmanifest) 
+			 expects the property outgen.job.ditaval.filename to be set only
+			 when a ditaval is used -->
+		<if>
+			<equals arg1="${bmanifest.output.ditaval.filename}" arg2="" trim="true" />
+			<then>
+				<echolog>Executing native target WITHOUT ditaval</echolog>
+				<ant target="${bmanifest.output.target}" antfile="${basedir}${bmanifest.output.buildfile}" inheritAll="false" >
+					<propertyset >
+						<propertyset >
+							<propertyset refid="bmanifest.output.CommonProperties.id"/>
+							<mapper type="glob" from="bmanifest.job.*" to="*"/>
+						</propertyset>
+						<propertyset>
+							<propertyset refid="bmanifest.output.systemparams.id"/>
+							<mapper type="glob" from="bmanifest.output.systemparams.*" to="outgen.preprocessor.*"/>
+						</propertyset>
+					</propertyset>
+				</ant>
+			</then>
+			<else>
+				<echolog>Executing native target WITH ditaval</echolog>
+				<ant target="${bmanifest.output.target}" antfile="${basedir}${bmanifest.output.buildfile}" inheritAll="false" >
+					<propertyset >
+						<propertyset refid="bmanifest.output.CommonProperties.id"/>
+						<mapper type="glob" from="bmanifest.job.*" to="*"/>
+					</propertyset>
+					<propertyset>
+						<propertyset refid="bmanifest.output.systemparams.id"/>
+						<mapper type="glob" from="bmanifest.output.systemparams.*" to="outgen.preprocessor.*"/>
+					</propertyset>
+					<!-- Add the ditaval property -->
+					<property name="outgen.job.ditaval.filename" value="${bmanifest.output.ditaval.filename}"/>
+					<!-- Legacy 3.4 -->
+					<property name="ditaval" value="${bmanifest.output.ditaval.filename}" />
+				</ant>
+			</else>
+		</if>
+
+		<!-- Clean up the file created by the target CreateFolderStructureData -->
+		<if>
+			<isfalse value="${bmanifest.job.keep.content}"/>
+			<then>
+				<delete includeemptydirs="true" >
+					<fileset dir="${bmanifest.output.job.dir}/content" casesensitive="no">
+						<include name="**/*"/>
+						<exclude name="**/source.txt"/>
+					</fileset>
+				</delete>
+			</then>
+			<else>
+				<echocaution>The clean up of the content for each job is disabled (property bmanifest.job.keep.content set to "yes"). This will use a lot more disk space.</echocaution>
+			</else>
+		</if>
+
+
+		<echoend>bmanifest_outgen_target</echoend>
+	</target>
+</project>

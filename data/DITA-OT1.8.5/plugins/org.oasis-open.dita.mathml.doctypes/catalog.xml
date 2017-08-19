@@ -1,0 +1,12 @@
+<?xml version="1.0" ?> 
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+
+	<group>
+		<public publicId="-//OASIS//ENTITIES DITA 1.3 MathML Domain//EN" uri="dtd/mathmlDomain.ent"/>
+		<public publicId="-//OASIS//ELEMENTS DITA 1.3 MathML Domain//EN" uri="dtd/mathmlDomain.mod"/>
+		<public publicId="-//OASIS//ENTITIES DITA 1.3 Equation Domain//EN" uri="dtd/equationDomain.ent"/>
+		<public publicId="-//OASIS//ELEMENTS DITA 1.3 Equation Domain//EN" uri="dtd/equationDomain.mod"/>
+	</group>
+
+</catalog>

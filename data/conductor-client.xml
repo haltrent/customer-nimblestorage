@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="conductor-client" default="" basedir=".">
+
+	<!-- Uncomment the following property to overwrite the one defined in outgen-init.properties -->
+	<property name="outgen.ot.version" value="2.3.1"/>
+
+	<!-- Import basic init -->
+	<import file="outgen-init.xml"/>
+	<!-- Oxygen WebHelp Output -->
+	<target name="client.dita2webhelp-responsive"
+		depends="default_dependencies, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>Oxygen WebHelp Base Start</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename"
+			location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename"
+			location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+		<!-- DITA-OT standard params -->
+
+		<!-- Nimble custom params -->
+		<property name="outgen.job.build.webhelp.responsive.skin.name"
+			value="${outgen.job.userparam.preprocessor.webhelp.responsive.skin.name}"/>
+
+		<!-- These are the required target calls to do -->
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="webhelp-responsive"/>
+			<param name="args.rellinks" value="all"/>
+			<param name="args.draft" value="yes"/>
+			<param name="clean.temp" value="no"/>
+			<param name="webhelp.responsive.skin.name"
+				value="${outgen.job.build.webhelp.responsive.skin.name}"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build" inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<property name="job.keep.temp" value="yes"/>
+
+		<echoend>Oxygen WebHelp Base Finish</echoend>
+	</target>
+
+	<!-- Standard PDF -->
+	<target name="client.dita2nimble-pdf-standard"
+		depends="default_dependencies, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>client.dita2nimble-pdf-standard start</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename"
+			location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename"
+			location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+		<!-- DITA-OT standard params -->
+		<property name="outgen.job.build.args.draft"
+			value="${outgen.job.userparam.preprocessor.args.draft}"/>
+		<!-- Nimble custom params -->
+		<property name="outgen.job.build.client.args.front.cover"
+			value="${outgen.job.userparam.preprocessor.client.args.front.cover}"/>
+		<property name="outgen.job.build.client.args.feedback"
+			value="${outgen.job.userparam.preprocessor.client.args.feedback}"/>
+		<!-- IXIASOFT processing -->
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_pdfrenderer"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+		<antcall target="ot_build_keep_topicfo"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="nimble-pdf-standard"/>
+			<!-- DITA-OT standard params -->
+			<param name="args.draft" value="${outgen.job.build.args.draft}"/>
+			<param name="pdf.formatter" value="xep"/>
+			<!-- Nimble custom params -->
+			<param name="client.args.front.cover"
+				value="${outgen.job.build.client.args.front.cover}"/>
+			<param name="client.args.feedback" value="${outgen.job.build.client.args.feedback}"
+			/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build" inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<property name="job.keep.temp" value="yes"/>
+
+		<echoend>client.dita2nimble-pdf-standard end</echoend>
+	</target>
+	<target name="client.dita2nimble-pdf-hardcopy"
+		depends="default_dependencies, flatten, resolve_container_keyref, extract_HiRes_images">
+		<echostart>client.dita2nimble-pdf-hardcopy start</echostart>
+
+		<property name="outgen.job.build.filename" location="${outgen.job.dir}/build.xml"/>
+		<property name="outgen.job.build.template.filename"
+			location="${outgen.resources.dir}/job-build-template.xml"/>
+		<property name="outgen.job.build.otlog.filename"
+			location="${outgen.job.ot.log.dir}/${outgen.job.source.name.noext}.ot.log"/>
+		<!-- DITA-OT standard params -->
+		<property name="outgen.job.build.args.draft"
+			value="${outgen.job.userparam.preprocessor.args.draft}"/>
+		<!-- Nimble custom params -->
+		<property name="outgen.job.build.client.args.dimension"
+			value="${outgen.job.userparam.preprocessor.client.args.dimension}"/>
+		<property name="outgen.job.build.client.args.layout"
+			value="${outgen.job.userparam.preprocessor.client.args.layout}"/>
+		<!-- IXIASOFT processing -->
+		<antcall target="ot_build_create"/>
+		<antcall target="ot_build_add_pdfrenderer"/>
+		<antcall target="ot_build_add_ditaval_ifpresent"/>
+		<antcall target="ot_build_clean_ot_temp"/>
+		<antcall target="ot_build_keep_topicfo"/>
+
+		<update-ot-build-file buildfile="${outgen.job.build.filename}">
+			<param name="transtype" value="nimble-pdf-hardcopy"/>
+			<!-- DITA-OT standard params -->
+			<param name="args.draft" value="${outgen.job.build.args.draft}"/>
+			<param name="pdf.formatter" value="xep"/>
+			<!-- Nimble custom params -->
+			<param name="client.args.dimension"
+				value="${outgen.job.build.client.args.dimension}"/>
+			<param name="client.args.layout" value="${outgen.job.build.client.args.layout}"/>
+		</update-ot-build-file>
+
+		<antcall target="dita_startcmd_ot_build" inheritRefs="true"/>
+
+		<antcall target="clean_ot_output"/>
+		<!-- Set the property job.keep.temp to preserve the completed temp folder of the task -->
+		<property name="job.keep.temp" value="yes"/>
+
+		<echoend>client.dita2nimble-pdf-hardcopy end</echoend>
+	</target>
+</project>

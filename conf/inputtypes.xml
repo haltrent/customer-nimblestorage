@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Clients wishing to extends the list of available input types should add their input type to
+     client/inputtypes.xml. If a duplicate name is inserted, all types will be shown.-->
+<inputtypes>
+	<inputtype appliesTo="topic" name="DITA-Topic" class="com.ixiasoft.outputgenerator.packager.DitaTopicPackager"/>
+	<inputtype appliesTo="map" name="DITA-Map" class="com.ixiasoft.outputgenerator.packager.DitaMapPackager"/>
+	<inputtype appliesTo="image" name="DITA-Image" class="com.ixiasoft.outputgenerator.packager.DitaImagePackager"/>
+	<inputtype appliesTo="resourcepkg" name="IXIA-resource-package" class="com.ixiasoft.outputgenerator.packager.DitaMapPackager"/>
+	<inputtype appliesTo="snapshot" name="DITA-Snapshot" class="com.ixiasoft.outputgenerator.packager.DitaSnapshotPackager"/>
+	<inputtype appliesTo="build-manifest" name="DITA-Build-Manifest" class="com.ixiasoft.outputgenerator.packager.DitaBuildManifestPackager"/>
+</inputtypes>

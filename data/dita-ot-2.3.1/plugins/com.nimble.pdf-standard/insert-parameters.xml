@@ -1,0 +1,6 @@
+<dummy>
+    <param name="BRAND" expression="${client.args.brand}" if="client.args.brand"/>
+    <param name="DRAFT" expression="${args.draft}" if="args.draft"/>
+    <param name="FRONTCOVER" expression="${client.args.front.cover}" if="client.args.front.cover"/>
+    <param name="FEEDBACK" expression="${client.args.feedback}" if="client.args.feedback"/>
+</dummy>

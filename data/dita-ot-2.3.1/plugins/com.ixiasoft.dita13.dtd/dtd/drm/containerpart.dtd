@@ -1,0 +1,126 @@
+<!-- ============================================================= -->
+<!--                    HEADER                                     -->
+<!-- ============================================================= -->
+<!--  MODULE:    DITA Container Part DTD                           -->
+<!--  VERSION:   1.0                                               -->
+<!--  DATE:      Septembre 2013                                    -->
+<!--                                                               -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    PUBLIC DOCUMENT TYPE DEFINITION            -->
+<!--                    TYPICAL INVOCATION                         -->
+<!--                                                               -->
+<!--  Refer to this file by the following public identifier or an 
+      appropriate system identifier 
+PUBLIC "-//IXIA//DTD DITA Container Part//EN"
+      Delivered as file "containerpart.dtd"                        -->
+
+<!-- ============================================================= -->
+<!-- SYSTEM:     Darwin Information Typing Architecture (DITA)     -->
+<!--                                                               -->
+<!-- PURPOSE:    DTD to describe DITA Book Maps                    -->
+<!--                                                               -->
+<!-- ORIGINAL CREATION DATE:                                       -->
+<!--             March 2004                                        -->
+<!--                                                               -->
+<!--             (C) Copyright OASIS Open 2006.                    -->
+<!--             (C) Copyright IBM Corporation 2004, 2005.         -->
+<!--             All Rights Reserved.                              -->
+<!--                                                               -->
+<!--  UPDATES:                                                     -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    MAP ENTITY DECLARATIONS                    -->
+<!-- ============================================================= -->
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ENTITY DECLARATIONS                 -->
+<!-- ============================================================= -->
+
+
+<!ENTITY % mapgroup-d-dec 
+  PUBLIC "-//OASIS//ENTITIES DITA 1.3 Map Group Domain//EN" 
+         "../../../org.oasis-open.dita.v1_3/dtd/base/dtd/mapGroup.ent"
+>%mapgroup-d-dec;
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE DECLARATIONS              -->
+<!-- ============================================================= -->
+
+
+<!-- ============================================================= -->
+<!--                    DOMAIN EXTENSIONS                          -->
+<!-- ============================================================= -->
+<!--                    One for each extended base element, with
+                        the name of the domain(s) in which the
+                        extension was declared                     -->
+<!ENTITY % topicref     "topicref |
+                         %mapgroup-d-topicref;
+                        ">
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ATTRIBUTE EXTENSIONS                -->
+<!-- ============================================================= -->
+<!ENTITY % props-attribute-extensions  ""                            >
+<!ENTITY % base-attribute-extensions   ""                            >
+
+<!-- ============================================================= -->
+<!--                    DOMAINS ATTRIBUTE OVERRIDE                 -->
+<!-- ============================================================= -->
+<!--                    Must be declared ahead of the DTDs, which
+                        puts @domains first in order               -->
+
+<!ENTITY included-domains 
+                        "&mapgroup-d-att;
+                         &container-c;
+                        ">
+
+<!-- ============================================================= -->
+<!--                    CONTENT CONSTRAINT INTEGRATION             -->
+<!-- ============================================================= -->
+
+<!--                    Constraint on mapref content is defined    -->
+<!--                    inline for simplicity                      -->
+<!ENTITY container-c     
+                        "(map container-c)"                          >
+
+<!ENTITY % topicmeta   "topicmeta"                                   >
+<!ENTITY % keydef.content
+                       "(%topicmeta;)?"
+>
+<!ENTITY % mapref.content
+                       "(%topicmeta;)?"
+>
+
+<!-- ============================================================= -->
+<!--                    MAP ELEMENT INTEGRATION                    -->
+<!-- ============================================================= -->
+
+<!ENTITY % map-type 
+  PUBLIC "-//OASIS//ELEMENTS DITA 1.3 Map//EN" 
+         "../../../org.oasis-open.dita.v1_3/dtd/base/dtd/map.mod"
+>%map-type;
+
+<!-- ============================================================= -->
+<!--                    DOMAIN ELEMENT INTEGRATION                 -->
+<!-- ============================================================= -->
+
+
+<!ENTITY % mapgroup-d-def  
+  PUBLIC "-//OASIS//ELEMENTS DITA 1.3 Map Group Domain//EN" 
+         "../../../org.oasis-open.dita.v1_3/dtd/base/dtd/mapGroup.mod"
+>%mapgroup-d-def;
+
+<!ENTITY % container-type 
+  PUBLIC "-//IXIA//ELEMENTS DITA Container//EN" 
+         "container.mod"
+>%container-type;
+
+<!ENTITY % containerpart-type 
+  PUBLIC "-//IXIA//ELEMENTS DITA Container Part//EN" 
+         "containerpart.mod"
+>%containerpart-type;
+
+<!-- ================== End DITA Container Part DTD  ============= -->

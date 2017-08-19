@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="outgen-init" default="" basedir=".">
+
+	<!--
+	*********************************************************************************
+	* Define global taskdef
+	*********************************************************************************
+	-->
+
+	<!-- Import Ixiasoft task -->
+	<taskdef name="create-ot-build-file" classname="com.ixiasoft.outputgenerator.antTasks.ot.CreateOtBuildFile"/>
+	<taskdef name="update-ot-build-file" classname="com.ixiasoft.outputgenerator.antTasks.ot.UpdateOtBuildFile"/>
+	<taskdef name="extract-images" classname="com.ixiasoft.outputgenerator.antTasks.ExtractImagesTask"/>
+	<taskdef name="watermark" classname="com.ixiasoft.outputgenerator.antTasks.Watermark"/>
+	<taskdef name="metadata" classname="com.ixiasoft.outputgenerator.antTasks.AddPDFMetadataTask"/>
+	<taskdef name="branding" classname="com.ixiasoft.outputgenerator.antTasks.BrandingTask"/>
+	<taskdef name="extract-indexterm" classname="com.ixiasoft.outputgenerator.antTasks.ExtractIndexTermTask"/>
+	<taskdef name="resolve-container-keyref" classname="com.ixiasoft.outputgenerator.antTasks.ResolveKeyrefs"/>
+	<taskdef name="add-keydefs" classname="com.ixiasoft.outputgenerator.antTasks.AddKeydefsTask"/>
+
+	<!-- Define all ant task contrib. http://ant-contrib.sourceforge.net/ -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
+	<!-- Support for the XmlTask ant library. http://www.oopsconsultancy.com/software/xmltask/#tutorials -->
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+
+	<!-- Support for the xpath ant library. https://code.google.com/p/ant-xpath-task/ -->
+	<taskdef name="xpath" classname="uk.co.cocking.anttasks.XPathTask"/>
+
+	<!--
+	*********************************************************************************
+	* If the ${outgen.ot.version} is defined in the conductor file, no action is required.
+	*
+	* If it is not defined in the conductor and the outgen-init.properties file exists, 
+	* the value of ${outgen.ot.version} will be set from the content of outgen-init.properties file.
+	*********************************************************************************
+	-->
+	<if>
+		<and>
+			<available file="outgen-init.properties"/>
+			<not>
+				<isset property="outgen.ot.version"/>
+			</not>
+		</and>
+		<then>
+			<loadproperties srcFile="outgen-init.properties"/>
+		</then>
+	</if>
+	<!-- Check if ${outgen.ot.version} is defined; otherwise, set it to the default value.-->
+	<condition property="outgen.ot.version" value="2.3.1">
+		<not>
+			<isset property="outgen.ot.version"/>
+		</not>
+	</condition>
+	<!-- deprecated property -->
+	<condition property="ot.version" value="${outgen.ot.version}">
+		<not>
+			<isset property="ot.version"/>
+		</not>
+	</condition>
+	<echo level="info">Current OT version ${outgen.ot.version}</echo>
+
+	<!--
+	*********************************************************************************
+	* Define global property to use across conductors
+	* All properties defined outside of any targets will be executed when the
+	* ant files are loaded; cannot contain properties defined by the running
+	* job (ie.e:${outgen.job.*}) into its value except ${outgen.job.ot.log.dir}
+	*********************************************************************************
+	-->
+
+	<!-- Enable to retrieve all environment variable from the OS -->
+	<property environment="env"/>
+	<osfamily property="outgen.os.family"/>
+
+	<property name="outgen.temp.dir" location="../temp"/>
+	<property name="outgen.data.dir" location="../data"/>
+	<property name="outgen.resources.dir" location="${outgen.data.dir}/resources"/>
+	<property name="outgen.resources.dir.client" location="${outgen.resources.dir}/client"/>
+	<!-- 
+	Check if the property outgen.ot.release.family is defined.
+	In the 4.2 version and lower of the OG, this was required property.
+	In the version 4.3 and up, it is now optional.
+	-->
+	<if>
+		<and>
+			<matches string="${outgen.ot.version}" pattern="^1\..*"/>
+			<not>
+				<isset property="outgen.ot.release.family"/>
+			</not>
+		</and>
+		<then>
+			<property name="outgen.ot.release.family" value="1.x"/>
+		</then>
+		<else>
+			<property name="outgen.ot.release.family" value="2.x"/>
+		</else>
+	</if>
+	<switch value="${outgen.ot.release.family}">
+		<case value="1.x">
+			<property name="outgen.ot.dir" location="${outgen.data.dir}/DITA-OT${outgen.ot.version}"/>
+		</case>
+		<case value="2.x">
+			<property name="outgen.ot.dir" location="${outgen.data.dir}/dita-ot-${outgen.ot.version}"/>
+		</case>
+		<default>
+			<fail message="OT Release Family not supported ${outgen.ot.release.family}"/>
+		</default>
+	</switch>
+
+
+	<!-- Deprecated properties -->
+	<property name="temp" location="${outgen.temp.dir}"/>
+	<property name="ot.dir" location="${outgen.ot.dir}"/>
+	<property name="xsl-ixia" location="${outgen.data.dir}/xsl-ixia"/>
+
+	<!--
+	Import catalog file
+	Use this catalog id for all tasks that require a catalog to parse the content
+	-->
+	<xmlcatalog id="ot.catalog">
+		<catalogpath path="${outgen.ot.dir}/catalog-dita.xml"/>
+	</xmlcatalog>
+
+	<!--
+	*********************************************************************************
+	* Import all other targets to be available to conductor file
+	*********************************************************************************
+	-->
+
+	<!-- Import common targets -->
+	<import file="commontargets.xml"/>
+
+	<!-- Import outgen init of the client-->
+	<import file="outgen-init-client.xml" optional="true"/>
+
+	<!-- Import outgen init of the client-->
+	<import file="outgen-init-debug.xml" optional="true"/>
+
+	<!--
+	*********************************************************************************
+	* Create the outgen_job_init target that needs to be executed at the beginning of the "default_dependencies" target
+	* Don't change the content of this target. If you need to add something to initiate a job, 
+	* change the target "outgen_job_init-client" in outgen-init-client.xml
+	*********************************************************************************
+	-->
+	<!-- See documentation for more info https://ant.apache.org/manual/targets.html#extension-points -->
+	<extension-point name="outgen_job_init" depends="outgen_job_init_ixiasoft"/>
+
+	<target name="outgen_job_init_ixiasoft">
+		<echostart>outgen_job_init_ixiasoft</echostart>
+
+		<!-- Common properties created by this target -->
+		<property name="outgen.job.dir" location="${outgen.temp.dir}/${outgen.job.foldername}"/>
+
+		<!-- It is on purpose that the following location does not contain a "/" because
+		     the outgen.job.source.collection property already starts and ends with a "/" -->
+		<property name="outgen.job.source.dir" location="${outgen.job.dir}${outgen.job.source.collection}"/>
+		<property name="outgen.job.source.filename" location="${outgen.job.source.dir}/${outgen.job.source.name}" />
+
+		<!-- Define the location where the DITA OT log will be created
+			 based on the value of the preprocessor parameter "keep.log.files" -->
+		<if>
+			<istrue value="${outgen.preprocessor.keep.log.files}"/>
+			<then>
+				<property name="outgen.job.ot.log.dir" location="${outgen.job.output.dir}"/>
+			</then>
+			<else>
+				<property name="outgen.job.ot.log.dir" location="${outgen.job.dir}"/>
+			</else>
+		</if>
+
+		<property name="outgen.job.ot.temp.dir" location="${outgen.job.dir}/temp"/>
+
+		<!--
+		These properties are defined by calling the specified target as dependency:
+		
+		Name of the properties             Target to call
+		=================================================
+		${hostname}                        gethostname
+		${outgen.job.source.objtype}       getobjecttype
+		-->
+
+		<!--
+		The following properties are automatically defined by the Output Generator 
+		Name in 3.4		 	 Name in 4.0
+		(deprecated)
+		==============		 ==============================
+		build.log         -> outgen.job.build.otlog.filename
+		build.properties  -> outgen.job.userparam.filename
+		collection        -> outgen.job.source.collection
+		ditaval           -> outgen.job.ditaval.filename
+		id                -> outgen.job.source.name
+		id.noextension    -> outgen.job.source.name.noext
+		ot.build.log      -> DOESN'T EXIST ANYMORE
+		outputdir         -> outgen.job.output.dir
+		path              -> outgen.job.foldername
+		publisher.email   -> outgen.job.requester.email
+		publisher.name    -> outgen.job.requester.name
+		textml.address    -> outgen.job.textmlserver.name
+		textml.docbase    -> outgen.job.doscbase.name
+		writer.email      -> outgen.job.lastmodifier.email
+		writer.name       -> outgen.job.lastmodifier.name
+							 outgen.preprocessor.*
+		-->
+
+		<echoend>outgen_job_init_ixiasoft</echoend>
+	</target>
+
+	<!--
+	*********************************************************************************
+	* Create the outgen_job_init-post target that needs to be executed after the
+	* outgen_job_init-client at the beginning of "default_dependencies" target
+	*********************************************************************************
+	-->
+	<target name="outgen_job_init_post">
+		<echostart>outgen_job_init_post</echostart>
+		<!--
+		Define the default render engine to fop. If this value is already defined
+		in the outgen_job_init-client target, this default value is ignored.
+		Note that the Ixiasoft Redline feature does not work with the fop engine. To set a different rendered, 
+		do not update the value below; set it in the outgen_job_init-client target instead.
+		-->
+
+		<setvalueifnotset property="outgen.job.default.pdf.formatter" value="fop"/>
+
+		<setvalueifnotset property="outgen.job.ant.java.home" value="${java.home}"/>
+		<setvalueifnotset property="outgen.job.ant.java.memory" value="512m"/>
+		<setvalueifnotset property="outgen.job.ant.opts" value="-Xmx${outgen.job.ant.java.memory} -Djavax.xml.transform.TransformerFactory=net.sf.saxon.TransformerFactoryImpl"/>
+
+		<switch value="${outgen.ot.release.family}">
+			<case value="1.x">
+				<switch value="${outgen.os.family}">
+					<case value="windows">
+						<setvalueifnotset property="outgen.job.ant.path" value="${outgen.ot.dir}${file.separator}tools${file.separator}ant${file.separator}bin${path.separator}${env.Path}"/>
+					</case>
+					<case value="unix">
+						<setvalueifnotset property="outgen.job.ant.path" value="${outgen.ot.dir}${file.separator}tools${file.separator}ant${file.separator}bin${path.separator}${env.PATH}"/>
+					</case>
+					<default>
+						<fail message="No env.Path for the OS family ${outgen.os.family}"/>
+					</default>
+				</switch>
+				<setvalueifnotset property="outgen.job.ant.home" value="${outgen.ot.dir}${file.separator}tools${file.separator}ant"/>
+			</case>
+			<case value="2.x">
+				<setvalueifnotset property="outgen.job.ant.java.cmd" value=""/>
+				<setvalueifnotset property="outgen.job.ant.args" value=""/>
+				<!-- no need to add "ant" on env.Path or env.PATH with 2.x but still need to 
+					 put the path into the outgen.job.ant.path to be pass to the OT  -->
+				<switch value="${outgen.os.family}">
+					<case value="windows">
+						<setvalueifnotset property="outgen.job.ant.path" value="${env.Path}"/>
+					</case>
+					<case value="unix">
+						<setvalueifnotset property="outgen.job.ant.path" value="${env.PATH}"/>
+					</case>
+					<default>
+						<fail message="No env.Path for the OS family ${outgen.os.family}"/>
+					</default>
+				</switch>
+				<!-- no need to define env.ant_home with 2.x -->
+			</case>
+			<default>
+				<fail message="OT Release Family not supported ${outgen.ot.release.family}"/>
+			</default>
+		</switch>
+
+		<setvalueifnotset property="outgen.job.keep.temp" value="no"/>
+		<setvalueifnotset property="outgen.job.keep.topicfo" value="no"/>
+		<setvalueifnotset property="outgen.job.clean.ot.temp" value="yes"/>
+		<setvalueifnotset property="outgen.job.clean.outputdir" value="yes"/>
+
+		<echoend>outgen_job_init_post</echoend>
+	</target>
+
+	<!--
+	*********************************************************************************
+	* Create the default_dependencies target that needs to be executed at the beginning of
+	* each target called by the preprocessor
+	* Don't change the content of this target. To add
+	* something, change the target "outgen_job_init-client" in outgen-init-client.xml
+	*********************************************************************************
+	-->
+	<extension-point name="default_dependencies" depends="default_dependencies_ixiasoft"/>
+
+	<target name="default_dependencies_ixiasoft" depends="load_properties, outgen_job_init, outgen_job_init_post">
+		<echostart>default_dependencies_ixiasoft</echostart>
+
+		<antcall target="echo_outgen_properties"/>
+
+		<echoend>default_dependencies_ixiasoft</echoend>
+	</target>
+</project>

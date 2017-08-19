@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="commontargets-system" default="" basedir=".">
+
+	<target name="echo_outgen_properties">
+
+		<if>
+			<isset property="label"/>
+			<then>
+				<property name="suffix" value="_${label}" />
+			</then>
+			<else>
+				<property name="suffix" value="" />
+				<property name="label" value="" />
+			</else>
+		</if>
+
+		<echostart>echo_outgen_properties ${label}</echostart>
+
+		<!-- Save the following defined properties into a file at the moment where this task is called
+			hostname
+			outgen.*
+			env.*
+		-->
+		<tstamp>
+			<!-- Format current time as 23h12m45.234s -->
+			<format property="tstime" pattern="HH'h'mm'm'ss.SSS's'"/>
+		</tstamp>
+		<property name="file" location="${outgen.job.dir}/${outgen.job.source.name.noext}.ant-outgen[${tstime}]${suffix}.properties"/>
+		<echolog>The properties are saved in ${file}</echolog>
+
+		<echoproperties destfile="${file}" failonerror="false">
+			<propertyset>
+				<propertyref prefix="outgen."/>
+				<propertyref prefix="hostname"/>
+				<propertyref prefix="env."/>
+			</propertyset>
+		</echoproperties>
+
+		<echoend>echo_outgen_properties ${label}</echoend>
+	</target>
+
+	<target name="echo_all_properties">
+
+		<if>
+			<isset property="label"/>
+			<then>
+				<property name="suffix" value="_${label}" />
+			</then>
+			<else>
+				<property name="suffix" value="" />
+				<property name="label" value="" />
+			</else>
+		</if>
+		<echostart>echo_all_properties ${label}</echostart>
+
+		<!-- Save all defined properties into a file at the moment where this task is called -->
+		<tstamp>
+			<!-- Format current time as 23h12m45.234s -->
+			<format property="tstime" pattern="HH'h'mm'm'ss.SSS's'"/>
+		</tstamp>
+		<property name="file" location="${outgen.job.dir}/ant-all[${tstime}]${suffix}.properties"/>
+		<echolog>The properties are saved in ${file}</echolog>
+		<echoproperties destfile="${file}" failonerror="false"/>
+
+		<echoend>echo_all_properties ${label}</echoend>
+	</target>
+
+	<target name="dita_startcmd_define_classpath">
+		<echostart>dita_startcmd_define_classpath</echostart>
+
+		<!-- Build standard ANT classpath defined in startcmd.bat -->
+		<path id="ant.classpath.id">
+			<path>
+				<pathelement location="${outgen.ot.dir}/lib"/>
+			</path>
+			<!-- Load all the jar file present in the lib folder of the Open Toolkit -->
+			<fileset dir="${outgen.ot.dir}/lib">
+				<include name="*.jar"/>
+			</fileset>
+			<filelist dir="${outgen.ot.dir}/lib/saxon" files="saxon9.jar,saxon9-dom.jar"/>
+		</path>
+
+		<!-- Check if a before classpath exists if not create empty one -->
+		<if>
+			<not>
+				<isreference refid="outgen.job.ant.classpath.client.before.id"/>
+			</not>
+			<then>
+				<path id="outgen.job.ant.classpath.client.before.id"/>
+			</then>
+		</if>
+		<!-- Check if a after classpath exists if not create empty one-->
+		<if>
+			<not>
+				<isreference refid="outgen.job.ant.classpath.client.after.id"/>
+			</not>
+			<then>
+				<path id="outgen.job.ant.classpath.client.after.id"/>
+			</then>
+		</if>
+		<!-- Build the classpath witht the before, standard and after -->
+		<path id="outgen.job.ant.classpath.id">
+			<path refid="outgen.job.ant.classpath.client.before.id"/>
+			<path refid="ant.classpath.id"/>
+			<path refid="outgen.job.ant.classpath.client.after.id"/>
+		</path>
+
+		<!-- Transform the list of resources into a string -->
+		<pathconvert targetos="${outgen.os.family}" property="outgen.job.ant.classpath" refid="outgen.job.ant.classpath.id"/>
+		<echodebugprop name="outgen.job.ant.classpath"/>
+
+		<echoend>dita_startcmd_define_classpath</echoend>
+	</target>
+
+	<target name="dita_startcmd_define_classpath_2x">
+		<echostart>dita_startcmd_define_classpath</echostart>
+
+		<!-- Check if a after classpath exists if not create empty one-->
+		<if>
+			<isreference refid="outgen.job.ant.classpath.client.2x"/>
+			<then>
+				<!-- Transform the list of resources into a string -->
+				<pathconvert targetos="${outgen.os.family}" property="outgen.job.ant.classpath" refid="outgen.job.ant.classpath.client.2x"/>
+				<echodebugprop name="outgen.job.ant.classpath"/>
+			</then>
+			<else>
+				<property name="outgen.job.ant.classpath" value=""/>
+			</else>
+		</if>
+
+		<echoend>dita_startcmd_define_classpath</echoend>
+	</target>
+	
+	<target name="dita_startcmd_ot_build">
+		<echostart>dita_startcmd_ot_build</echostart>
+
+		<!-- optional params: job.build.filename, job.build.otlog.filename -->
+		<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+		<otbuildparamfile local="job.build.otlog.filename" global="outgen.job.build.otlog.filename"/>
+
+		<!-- add topic.fo param if set -->
+		<if>
+			<istrue value="${outgen.job.keep.topicfo}"/>
+			<then>
+				<property name="job.ant.opts" value="${outgen.job.ant.opts} -Dorg.dita.pdf2.use-out-temp=true"/>
+			</then>
+			<else>
+				<property name="job.ant.opts" value="${outgen.job.ant.opts}"/>
+			</else>
+		</if>
+
+		<!-- Build the name of the target to execute
+			 The valid list is:
+			 - dita_startcmd_ot_build_windows
+			 - dita_startcmd_ot_build_linux
+			 - dita_startcmd_ot_build_windows_2x
+			 - dita_startcmd_ot_build_linux_2x -->
+		<switch value="${outgen.os.family}">
+			<case value="windows">
+				<property name="platform" value="windows"/>
+			</case>
+			<case value="unix">
+				<property name="platform" value="linux"/>
+			</case>
+			<default>
+				<fail message="No DITA Startcmd for the OS family ${outgen.os.family}"/>
+			</default>
+		</switch>
+		<switch value="${outgen.ot.release.family}">
+			<case value="1.x">
+				<property name="family" value=""/>
+			</case>
+			<case value="2.x">
+				<property name="family" value="_2x"/>
+			</case>
+			<default>
+				<fail message="OT Release Family not supported ${outgen.ot.release.family}"/>
+			</default>
+		</switch>
+		<antcall target="dita_startcmd_ot_build_${platform}${family}" inheritRefs="true"/>
+		<echoend>dita_startcmd_ot_build</echoend>
+	</target>
+
+	<target name="dita_startcmd_ot_build_windows" depends="dita_startcmd_define_classpath">
+		<echostart>dita_startcmd_ot_build_windows</echostart>
+
+		<!-- Launches the generated build file, captures the log to and saves it to the log file specified -->
+		<!-- This simulate startcmd.bat and execute ant.bat -f build.xml -->
+
+		<exec executable="cmd.exe" output="${job.build.otlog.filename}" dir="${outgen.job.dir}" failonerror="false" resultproperty="errorcode">
+			<env key="DITA_DIR" value="${outgen.ot.dir}"/>
+			<env key="ANT_OPTS" value="${job.ant.opts}"/>
+			<env key="ANT_HOME" value="${outgen.job.ant.home}"/>
+			<env key="Path" value="${outgen.job.ant.path}"/>
+			<env key="CLASSPATH" value="${outgen.job.ant.classpath}"/>
+			<env key="JAVA_HOME" value="${outgen.job.ant.java.home}"/>
+			<arg value="/c"/>
+			<arg value="ant"/>
+			<arg value="-f"/>
+			<arg value="${job.build.filename}"/>
+			<arg value="2&gt;&amp;1"/>
+		</exec>
+		<if>
+			<not>
+				<equals arg1="${errorcode}" arg2="0" trim="true"/>
+			</not>
+			<then>
+				<basename property="otlog" file="${job.build.otlog.filename}"/>
+				<echoerror>The OT build finish with an error code:${errorcode}. Please look at the ot.log "${otlog}"</echoerror>
+			</then>
+		</if>
+
+		<echoend>dita_startcmd_ot_build_windows</echoend>
+	</target>
+
+	<target name="dita_startcmd_ot_build_linux" depends="dita_startcmd_define_classpath">
+		<echostart>dita_startcmd_ot_build_linux</echostart>
+
+		<!-- Launches the generated build file, captures the log to and saves it to the log file specified -->
+		<!-- This simulate startcmd.sh and execute ant -f build.xml -->
+
+		<exec executable="/bin/sh" output="${job.build.otlog.filename}" dir="${outgen.job.dir}" failonerror="false" resultproperty="errorcode">
+			<env key="DITA_DIR" value="${outgen.ot.dir}"/>
+			<env key="ANT_OPTS" value="${job.ant.opts}"/>
+			<env key="ANT_HOME" value="${outgen.job.ant.home}"/>
+			<env key="PATH" value="${outgen.job.ant.path}"/>
+			<env key="CLASSPATH" value="${outgen.job.ant.classpath}"/>
+			<env key="JAVA_HOME" value="${outgen.job.ant.java.home}"/>
+			<arg value="-c"/>
+			<arg value="(exec 2&gt;&amp;1 ; ant -f ${job.build.filename})"/>
+		</exec>
+		<if>
+			<not>
+				<equals arg1="${errorcode}" arg2="0" trim="true"/>
+			</not>
+			<then>
+				<basename property="otlog" file="${job.build.otlog.filename}"/>
+				<echoerror>The OT build finish with an error code:${errorcode}. Please look at the ot.log "${otlog}"</echoerror>
+			</then>
+		</if>
+
+		<echoend>dita_startcmd_ot_build_linux</echoend>
+	</target>
+
+	<target name="dita_startcmd_ot_build_windows_2x" depends="dita_startcmd_define_classpath_2x">
+		<echostart>dita_startcmd_ot_build_windows_2x</echostart>
+
+		<!-- Launches the generated build file, captures the log to and saves it to the log file specified -->
+		<!-- Execute ant.bat -f build.xml -->
+
+		<exec executable="cmd.exe" output="${job.build.otlog.filename}" dir="${outgen.job.dir}" failonerror="false" resultproperty="errorcode">
+			<env key="ANT_OPTS" value="${job.ant.opts}"/>
+			<env key="Path" value="${outgen.job.ant.path}"/>
+			<env key="CLASSPATH" value="${outgen.job.ant.classpath}"/>
+			<env key="JAVA_HOME" value="${outgen.job.ant.java.home}"/>
+			<env key="JAVACMD" value="${outgen.job.ant.java.cmd}"/>
+			<env key="ANT_ARGS" value="${outgen.job.ant.args}"/>
+			<arg value="/c"/>
+			<arg value="${outgen.ot.dir}\bin\ant"/>
+			<arg value="-f"/>
+			<arg value="${job.build.filename}"/>
+			<arg value="2&gt;&amp;1"/>
+		</exec>
+		<if>
+			<not>
+				<equals arg1="${errorcode}" arg2="0" trim="true"/>
+			</not>
+			<then>
+				<basename property="otlog" file="${job.build.otlog.filename}"/>
+				<echoerror>The OT build finish with an error code:${errorcode}. Please look at the ot.log "${otlog}"</echoerror>
+			</then>
+		</if>
+
+		<echoend>dita_startcmd_ot_build_windows_2x</echoend>
+	</target>
+
+	<target name="dita_startcmd_ot_build_linux_2x" depends="dita_startcmd_define_classpath_2x">
+		<echostart>dita_startcmd_ot_build_linux_2x</echostart>
+
+		<!-- Launches the generated build file, captures the log to and saves it to the log file specified -->
+		<!-- Execute ant.bat -f build.xml -->
+
+		<exec executable="/bin/sh" output="${job.build.otlog.filename}" dir="${outgen.job.dir}" failonerror="false" resultproperty="errorcode">
+			<env key="ANT_OPTS" value="${job.ant.opts}"/>
+			<env key="PATH" value="${outgen.job.ant.path}"/>
+			<env key="CLASSPATH" value="${outgen.job.ant.classpath}"/>
+			<env key="JAVA_HOME" value="${outgen.job.ant.java.home}"/>
+			<env key="JAVACMD" value="${outgen.job.ant.java.cmd}"/>
+			<env key="ANT_ARGS" value="${outgen.job.ant.args}"/>
+			<arg value="-c"/>
+			<arg value="(exec 2&gt;&amp;1 ; ${outgen.ot.dir}/bin/ant -f ${job.build.filename})"/>
+		</exec>
+		<if>
+			<not>
+				<equals arg1="${errorcode}" arg2="0" trim="true"/>
+			</not>
+			<then>
+				<basename property="otlog" file="${job.build.otlog.filename}"/>
+				<echoerror>The OT build finish with an error code:${errorcode}. Please look at the ot.log "${otlog}"</echoerror>
+			</then>
+		</if>
+
+		<echoend>dita_startcmd_ot_build_linux_2x</echoend>
+	</target>
+
+	<target name="ot_build_create">
+		<echostart>ot_build_create</echostart>
+
+		<!-- optional params: job.build.filename, job.build.template.filename -->
+		<otbuildparamfile local="job.build.template.filename" global="outgen.job.build.template.filename"/>
+		<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+
+		<create-ot-build-file template="${job.build.template.filename}" buildfile="${job.build.filename}">
+			<param name="dita.dir" value="${outgen.ot.dir}"/>
+			<param name="dita.temp.dir" value="${outgen.job.ot.temp.dir}"/>
+			<param name="args.input" value="${outgen.job.source.filename}"/>
+			<param name="output.dir" value="${outgen.job.output.dir}"/>
+		</create-ot-build-file>
+
+		<echoend>ot_build_create</echoend>
+	</target>
+
+	<target name="ot_build_add_pdfrenderer">
+		<echostart>ot_build_add_pdfrenderer</echostart>
+
+		<!-- optional param: job.build.filename -->
+		<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+
+		<switch value="${outgen.job.default.pdf.formatter}">
+			<case value="fop">
+				<update-ot-build-file buildfile="${job.build.filename}">
+					<param name="pdf.formatter" value="fop"/>
+				</update-ot-build-file>
+			</case>
+			<case value="ah">
+				<update-ot-build-file buildfile="${job.build.filename}">
+					<param name="pdf.formatter" value="ah"/>
+				</update-ot-build-file>
+				<if>
+					<isset property="env.AXF_DIR"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="env.AXF_DIR" value="${env.AXF_DIR}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+				<if>
+					<isset property="env.AHF_DIR"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="env.AHF_DIR" value="${env.AHF_DIR}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+				<if>
+					<isset property="env.AXF_OPT"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="env.AXF_OPT" value="${env.AXF_OPT}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+				<if>
+					<isset property="env.AHF_OPT"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="env.AHF_OPT" value="${env.AHF_OPT}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+			</case>
+			<case value="xep">
+				<update-ot-build-file buildfile="${job.build.filename}">
+					<param name="pdf.formatter" value="xep"/>
+				</update-ot-build-file>
+				<if>
+					<isset property="outgen.job.xep.dir"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="xep.dir" value="${outgen.job.xep.dir}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+				<if>
+					<isset property="outgen.job.custom.xep.config"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="custom.xep.config" value="${outgen.job.custom.xep.config}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+				<if>
+					<isset property="outgen.job.custom.xep.memory"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="maxJavaMemory" value="${outgen.job.custom.xep.memory}"/>
+						</update-ot-build-file>
+					</then>
+				</if>
+			</case>
+		</switch>
+
+		<echoend>ot_build_add_pdfrenderer</echoend>
+	</target>
+
+	<target name="ot_build_add_htmlcompiler">
+		<echostart>ot_build_add_htmlcompiler</echostart>
+		<!-- TODO: Add code to support app local -->
+
+		<!-- optional param: job.build.filename -->
+		<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+
+		<if>
+			<isset property="outgen.job.hhc.dir"/>
+			<then>
+				<update-ot-build-file buildfile="${job.build.filename}">
+					<param name="hhc.dir" value="${outgen.job.hhc.dir}"/>
+				</update-ot-build-file>
+			</then>
+		</if>
+
+		<echoend>ot_build_add_htmlcompiler</echoend>
+	</target>
+
+	<target name="ot_build_add_ditaval_ifpresent">
+		<echostart>ot_build_add_ditaval_ifpresent</echostart>
+
+		<if>
+			<isset property="outgen.job.ditaval.filename"/>
+			<then>
+				<!-- This property is local to this target only -->	
+				<property name="ditaval.filename" location="${outgen.job.ditaval.filename}"/>
+			</then>
+		</if>
+
+		<if>
+			<isset property="ditaval.filename"/>
+			<then>
+				<echolog>The ditaval used is ${ditaval.filename}</echolog>
+				<!-- optional param: job.build.filename -->
+				<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+
+				<if>
+					<equals arg1="${outgen.ot.version}" arg2="1.5.4"/>
+					<then>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="dita.input.valfile" value="${ditaval.filename}"/>
+						</update-ot-build-file>
+					</then>
+					<else>
+						<update-ot-build-file buildfile="${job.build.filename}">
+							<param name="args.filter" value="${ditaval.filename}"/>
+						</update-ot-build-file>
+					</else>
+				</if>
+			</then>
+		</if>
+
+		<echoend>ot_build_add_ditaval_ifpresent</echoend>
+	</target>
+
+	<target name="ot_build_clean_ot_temp">
+		<echostart>ot_build_clean_ot_temp</echostart>
+
+		<!-- optional param: job.build.filename -->
+		<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+
+		<update-ot-build-file buildfile="${job.build.filename}">
+			<param name="clean.temp" value="${outgen.job.clean.ot.temp}"/>
+		</update-ot-build-file>
+
+		<echoend>ot_build_clean_ot_temp</echoend>
+	</target>
+
+	<target name="ot_build_keep_topicfo">
+		<echostart>ot_build_keep_topicfo</echostart>
+
+		<!-- optional param: job.build.filename -->
+		<otbuildparamfile local="job.build.filename" global="outgen.job.build.filename"/>
+
+		<update-ot-build-file buildfile="${job.build.filename}">
+			<param name="retain.topic.fo" value="${outgen.job.keep.topicfo}"/>
+		</update-ot-build-file>
+
+		<echoend>ot_build_keep_topicfo</echoend>
+	</target>
+
+</project>

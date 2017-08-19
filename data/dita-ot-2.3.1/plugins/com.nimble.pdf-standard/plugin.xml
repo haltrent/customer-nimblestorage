@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="com.nimble.pdf-standard">
+    <require plugin="org.dita.pdf2"/>
+
+    <feature extension="dita.transtype.print" value="nimble-pdf-standard"/>
+    <feature extension="dita.conductor.transtype.check" value="nimble-pdf-standard"/>
+
+    <feature extension="dita.conductor.target.relative" file="integrator.xml"/>
+    <feature extension="dita.conductor.pdf2.param" file="insert-parameters.xml"/>
+</plugin>
