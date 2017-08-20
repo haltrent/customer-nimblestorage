@@ -4,7 +4,7 @@
 	 conf/preprocessors.xml file, the preprocessor defined below overrides the preprocessor
 	 in conf. -->
 <preprocessors>
-
+	
 	<!-- ================================================= -->
 	<!-- Example of the different types of user parameters -->
 	<!--                                                   -->
@@ -17,7 +17,7 @@
 	<!--                                                   -->
 	<!-- @format is optional for all types except "date"   -->
 	<!-- see http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html -->
-
+	
 	<!--
 	<user>
 		<parameter label="Sample text field" name="text.field" mandatory="false" type="string"/>
@@ -35,9 +35,9 @@
 		<parameter label="Sample index-choice (using platform)" name="platform" mandatory="false" type="index-choice"/>
 	</user>
 	-->
-
+	
 	<!-- ================================================= -->
-
+	
 	<preprocessor name="dita2webhelp-responsive"
 		class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
 		<parameters>
@@ -54,14 +54,14 @@
 					<value name="light">Light</value>
 					<value name="orange">Orange</value>
 				</parameter>
-				<!--<parameter label="Sample index-list (using audience)" name="audience"
+				<parameter label="Sample index-list (using audience)" name="audience"
 					mandatory="false" type="index-list"/>
 				<parameter label="Sample index-choice (using platform)" name="platform"
-					mandatory="false" type="index-choice"/>-->
+					mandatory="false" type="index-choice"/>
 			</user>
 		</parameters>
 	</preprocessor>
-
+	
 	<preprocessor name="dita2nimble-pdf-standard"
 		class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
 		<parameters>
@@ -88,15 +88,15 @@
 					<value name="techmktg">Tech Marketing</value>
 					<value name="no">No</value>
 				</parameter>
-				<!--<parameter label="Sample index-list (using audience)" name="audience"
+				<parameter label="Sample index-list (using audience)" name="audience"
 					mandatory="false" type="index-list"/>
 				<parameter label="Sample index-choice (using platform)" name="platform"
-					mandatory="false" type="index-choice"/>-->
+					mandatory="false" type="index-choice"/>
 			</user>
 		</parameters>
 	</preprocessor>
-
-
+	
+	
 	<preprocessor name="dita2nimble-pdf-hardcopy"
 		class="com.ixiasoft.outputgenerator.preprocessor.AntProcessor">
 		<parameters>
@@ -122,13 +122,13 @@
 					<value name="landscape-3col">Landscape 3 Columns</value>
 					<value name="landscape-4col">Landscape 4 Columns</value>
 				</parameter>
-				<!--<parameter label="Sample index-list (using audience)" name="audience"
+				<parameter label="Sample index-list (using audience)" name="audience"
 					mandatory="false" type="index-list"/>
 				<parameter label="Sample index-choice (using platform)" name="platform"
-					mandatory="false" type="index-choice"/>-->
+					mandatory="false" type="index-choice"/>
 			</user>
 		</parameters>
 	</preprocessor>
-
-
+	
+	
 </preprocessors>
