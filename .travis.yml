@@ -1,0 +1,5 @@
+deploy:
+  provider: script
+  script: data/dita-ot-2.3.1/startcmd.sh
+  on:
+    branch: sandbox
