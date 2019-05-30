@@ -2,7 +2,7 @@
 <outputgenerator>
 	<textml address="IP_ADDRESS_IS_NOT_USED_LEAVE_EMPTY" port="2500" forceupdate="false" version="4" secure="false">
 		<docbase>DOCBASE_NAME_IS_NOT_USED_LEAVE_EMPTY</docbase>
-		<user domain="nimblestorage.com" name="htrent" password="Nimboli4321!"/>
+		credentials were dated and not usable but deleted line
 		<timeout>500000</timeout>
 	</textml>
 </outputgenerator>
